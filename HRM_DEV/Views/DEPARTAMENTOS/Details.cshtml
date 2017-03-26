@@ -4,47 +4,91 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+@Styles.Render("~/Content/EstiloFormulario.css")
+@Styles.Render("~/Content/EstiloBoton.css")
+@Styles.Render("~/Content/EstiloDetails.css")
+
+<div id="TitleDetails">
+    <p>Detalles del Departamento</p>
+</div>
 
 <div>
-    <h4>DEPARTAMENTOS</h4>
+    <br></br>
+    <br></br>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.NOMBRE)
-        </dt>
+    <button class="accordion">@Html.DisplayNameFor(model => model.NOMBRE)</button>
+    <div class="panel">
+        <dl class="form-group">
+            <dt class="control-label">
+                Nombre:
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.NOMBRE)
-        </dd>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.NOMBRE)
+            </dd>
+        </dl>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DESCRIPCION)
-        </dt>
+    <button class="accordion">@Html.DisplayNameFor(model => model.DESCRIPCION)</button>
+    <div class="panel">
+        <dl class="form-group">
+            <dt class="control-label">
+                Descripción:
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.DESCRIPCION)
-        </dd>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.DESCRIPCION)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ESTADO)
-        </dt>
+        </dl>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.ESTADO)
-        </dd>
+    <button class="accordion">@Html.DisplayNameFor(model => model.EMPRESAS.NOMBRE)</button>
+    <div class="panel">
+        <dl class="form-group">
+            <dt class="control-label">
+                <th>@Html.DisplayNameFor(model => model.EMPRESAS.NOMBRE)</th>
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EMPRESAS.NOMBRE)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.EMPRESAS.NOMBRE)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.EMPRESAS.NOMBRE)
-        </dd>
+        </dl>
+    </div>
 
-    </dl>
+    <button class="accordion">@Html.DisplayNameFor(model => model.ESTADO)</button>
+    <div class="panel">
+        <dl class="form-group">
+            <dt class="control-label">
+                <th>@Html.DisplayNameFor(model => model.ESTADO)</th>
+            </dt>
+
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.ESTADO)
+            </dd>
+        </dl>
+    </div>
+
+    <br></br>
+
+    <div class="form-group">
+        <input type="button" class="myButton" value="Editar" onclick="location.href='@Url.Action("Edit", "DEPARTAMENTOS", new { id = Model.ID_DEPARTAMENTO })'" />
+        <input type="button" class="myButton" value="Regresar" onclick="location.href='@Url.Action("Index", "DEPARTAMENTOS")'" />
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID_DEPARTAMENTO }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+
+@section Scripts{
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].onclick = function () {
+                this.classList.toggle("active");
+                this.nextElementSibling.classList.toggle("show");
+            }
+        }
+    </script>
+}
