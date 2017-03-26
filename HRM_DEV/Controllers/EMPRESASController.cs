@@ -15,9 +15,51 @@ namespace HRM_DEV.Controllers
         private hrm_dbEntities db = new hrm_dbEntities();
 
         // GET: EMPRESAS
-        public ActionResult Index()
+        /*
+        El metodo index es el encargado de mostrar los datos de las Empresas en la pantalla principal,
+        ademas, proporciona la capacidad de hacer busquedas refinadas que le permiten al usuario manejar facilmente
+        la información de los Empresas.
+        */
+        public ActionResult Index(string searchString)
         {
-            return View(db.EMPRESAS.ToList());
+            var EMP = from e in db.EMPRESAS
+                      select e;
+
+            //validación para verificar la existencia del criterio de busqueda
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                //Muestra las empresas por el estado que el usuario definió previamente
+                if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                {
+                    EMP = EMP.Where(s => s.ESTADO.Equals(searchString));
+                }
+
+                else if (searchString.Equals("Todo"))
+                {
+                    EMP = EMP.Where(s => s.ESTADO.Contains("tiv"));
+                }
+
+                else if (searchString.Equals("Seleccione"))
+                {
+                    TempData["Error"] = "¡Debe seleccionar las empresas que desea ver!";
+                    return RedirectToAction("Index");
+                }
+
+                //Muestra las empresas que coincidan con el nombre, apellidos o cedula que el usuario desea ver.
+                else
+                {
+                    EMP = EMP.Where(s => s.NOMBRE.Contains(searchString));
+                }
+
+                //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
+                if (EMP.Count() == 0)
+                {
+                    TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View(EMP);
         }
 
         // GET: EMPRESAS/Details/5
@@ -52,10 +94,95 @@ namespace HRM_DEV.Controllers
             {
                 db.EMPRESAS.Add(eMPRESAS);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                TempData["Success"] = "¡La empresa ha sido creada exitosamente!";
+                return RedirectToAction("Create");
             }
 
             return View(eMPRESAS);
+        }
+
+        [HttpPost]
+        public ActionResult formAction(string[] childChkbox)
+        {
+            if (childChkbox == null)
+            {
+                TempData["Error"] = "¡Se debe seleccionar al menos una empresa!";
+            }
+            else
+            {
+                if (Request.Form["Detalles"] != null)
+                {
+                    if (childChkbox.Count() == 1)
+                    {
+                        return RedirectToAction("Details", "EMPRESAS", new { id = childChkbox.First() });
+                    }
+                    else
+                    {
+                        TempData["Error"] = "!Solamente es posible ver los detalles de una empresa a la vez!";
+                    }
+                }
+                else if (Request.Form["Editar"] != null)
+                {
+
+                    if (childChkbox.Count() == 1)
+                    {
+                        return RedirectToAction("Edit", "EMPRESAS", new { id = childChkbox.First() });
+                    }
+                    else
+                    {
+                        TempData["Error"] = "¡Solamente es posible editar una empresa a la vez!";
+                    }
+                }
+                else if (Request.Form["Inhabilitar"] != null)
+                {
+                    var DEP = from d in db.DEPARTAMENTOS
+                              select d;
+                    var PTS = from p in db.PUESTOS
+                              select p;
+                    var EMPL = from e in db.EMPLEADOS
+                               select e;
+                    foreach (var i in childChkbox)
+                    {
+                        var emp = db.EMPRESAS.Find(Int32.Parse(i));
+                        emp.ESTADO = "Inactivo";
+                        foreach (var d in DEP)
+                        {
+                            if (d.EMPRESA == emp.ID_EMPRESA)
+                            {
+                                d.ESTADO = "Inactivo";
+                                foreach (var p in PTS)
+                                {
+                                    if (p.DEPARTAMENTO == d.ID_DEPARTAMENTO)
+                                    {
+                                        p.ESTADO = "Inactivo";
+                                        foreach (var e in EMPL)
+                                        {
+                                            if (e.PUESTO == p.PTS_ID)
+                                                e.ESTADO = "Inactivo";
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                        db.SaveChanges();
+                    }
+                    TempData["Success"] = "¡Se ha cambiado el estado de la o las empresas seleccionadas exitosamente!";
+                }
+
+                else if (Request.Form["Habilitar"] != null)
+                {
+                    foreach (var i in childChkbox)
+                    {
+                        var emp = db.EMPRESAS.Find(Int32.Parse(i));
+                        emp.ESTADO = "Activo";
+                        db.SaveChanges();
+                    }
+                    TempData["Success"] = "¡Se ha cambiado el estado de la o las empresas seleccionadas exitosamente!";
+                    return RedirectToAction("Index");
+                }
+            }
+            return RedirectToAction("Index");
         }
 
         // GET: EMPRESAS/Edit/5
@@ -84,36 +211,12 @@ namespace HRM_DEV.Controllers
             {
                 db.Entry(eMPRESAS).State = EntityState.Modified;
                 db.SaveChanges();
+                TempData["Success"] = "¡La informacion de la Empresa ha sido editada exitosamente!";
                 return RedirectToAction("Index");
             }
             return View(eMPRESAS);
         }
 
-        // GET: EMPRESAS/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            EMPRESAS eMPRESAS = db.EMPRESAS.Find(id);
-            if (eMPRESAS == null)
-            {
-                return HttpNotFound();
-            }
-            return View(eMPRESAS);
-        }
-
-        // POST: EMPRESAS/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            EMPRESAS eMPRESAS = db.EMPRESAS.Find(id);
-            db.EMPRESAS.Remove(eMPRESAS);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
         protected override void Dispose(bool disposing)
         {
@@ -125,3 +228,4 @@ namespace HRM_DEV.Controllers
         }
     }
 }
+
