@@ -3,152 +3,171 @@
 @{
     ViewBag.Title = "Details";
 }
+@Styles.Render("~/Content/EstiloFormulario.css")
+@Styles.Render("~/Content/EstiloBoton.css")
+@Styles.Render("~/Content/EstiloDetails.css")
 
-<h2>Details</h2>
+<div id="TitleDetails">
+    <p>Detalles del Empleado</p>
+</div>
 
 <div>
-    <h4>EMPLEADOS</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ID_EMPLEADO)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ID_EMPLEADO)
-        </dd>
+    <button class="accordion">Información Personal</button>
+    <div class="panel">
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.ID_EMPLEADO)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CEDULA)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.ID_EMPLEADO)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.CEDULA)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.CEDULA)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NOMBRE)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.CEDULA)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.NOMBRE)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.NOMBRE)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.APE1)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.NOMBRE)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.APE1)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.APE1)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.APE2)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.APE1)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.APE2)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.APE2)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FECHA_NAC)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.APE2)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.FECHA_NAC)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.DIRECCION)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FECHA_CONTR)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.DIRECCION)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.FECHA_CONTR)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.DESCRIPCION)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DIAS_VAC_DISP)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.DESCRIPCION)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.DIAS_VAC_DISP)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.TEL_HABITACION)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DIAS_VAC_UTILIZAD)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.TEL_HABITACION)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.DIAS_VAC_UTILIZAD)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.TEL_MOVIL)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DIRECCION)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.TEL_MOVIL)
+            </dd>
+        </dl>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.DIRECCION)
-        </dd>
+    <button class="accordion">Información Empresarial</button>
+    <div class="panel">
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.E_MAIL)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DESCRIPCION)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.E_MAIL)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.DESCRIPCION)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.SALARIO)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TEL_HABITACION)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.SALARIO)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.TEL_HABITACION)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.ESTADO)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TEL_MOVIL)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.ESTADO)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.TEL_MOVIL)
-        </dd>
+        <dl class="form-group">
+            <dt class="control-label">
+                @Html.DisplayNameFor(model => model.PUESTOS.NOMBRE)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.E_MAIL)
-        </dt>
+            <dd class="formDetails">
+                @Html.DisplayFor(model => model.PUESTOS.NOMBRE)
+            </dd>
+        </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.E_MAIL)
-        </dd>
+        <br></br>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SALARIO)
-        </dt>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.SALARIO)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ESTADO)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ESTADO)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PUESTOS.ID_PUESTO)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PUESTOS.ID_PUESTO)
-        </dd>
-
-    </dl>
+    <div class="form-group">
+        <input type="button" class="myButton" value="Editar" onclick="location.href='@Url.Action("Edit", "EMPLEADOS", new { id = Model.EMP_ID })'" />
+        <input type="button" class="myButton" value="Regresar" onclick="location.href='@Url.Action("Index", "EMPLEADOS")'" />
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EMP_ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+@section Scripts{
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].onclick = function () {
+                this.classList.toggle("active");
+                this.nextElementSibling.classList.toggle("show");
+            }
+        }
+    </script>
+}

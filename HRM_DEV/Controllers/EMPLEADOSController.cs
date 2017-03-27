@@ -15,10 +15,53 @@ namespace HRM_DEV.Controllers
         private hrm_dbEntities db = new hrm_dbEntities();
 
         // GET: EMPLEADOS
-        public ActionResult Index()
+        /*
+        El metodo index es el encargado de mostrar los datos de los Empleados en la pantalla principal,
+        ademas, proporciona la capacidad de hacer busquedas refinadas que le permiten al usuario manejar facilmente
+        la información de los Empleados.
+        */
+        public ActionResult Index(string searchString)
         {
-            var eMPLEADOS = db.EMPLEADOS.Include(e => e.PUESTOS);
-            return View(eMPLEADOS.ToList());
+            var EMP = from e in db.EMPLEADOS
+                      select e;
+
+            //validación para verificar la existencia del criterio de busqueda
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                //Muestra los empleados por el estado que el usuario definió previamente
+                if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                {
+                    EMP = EMP.Where(s => s.ESTADO.Equals(searchString));
+                }
+
+                else if (searchString.Equals("Todo"))
+                {
+                    EMP = EMP.Where(s => s.ESTADO.Contains("tiv"));
+                }
+
+                else if (searchString.Equals("Seleccione"))
+                {
+                    TempData["Error"] = "¡Debe seleccionar los empleados que desea ver!";
+                    return RedirectToAction("Index");
+                }
+
+                //Muestra los empleados que coincidan con el nombre, apellidos o cedula que el usuario desea ver.
+                else
+                {
+                    EMP = EMP.Where(s => s.NOMBRE.Contains(searchString) || s.APE1.Contains(searchString) || s.APE2.Contains(searchString) || s.CEDULA.Contains(searchString));
+                }
+
+                //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
+                if (EMP.Count() == 0)
+                {
+                    TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
+                    return RedirectToAction("Index");
+
+                }
+
+            }
+
+            return View(EMP);
         }
 
         // GET: EMPLEADOS/Details/5
@@ -39,7 +82,8 @@ namespace HRM_DEV.Controllers
         // GET: EMPLEADOS/Create
         public ActionResult Create()
         {
-            ViewBag.PUESTO = new SelectList(db.PUESTOS, "PTS_ID", "ID_PUESTO");
+            ViewData["ID"] = CrearID();
+            viewBagPuestos();
             return View();
         }
 
@@ -48,17 +92,89 @@ namespace HRM_DEV.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EMP_ID,ID_EMPLEADO,CEDULA,NOMBRE,APE1,APE2,FECHA_NAC,FECHA_CONTR,DIAS_VAC_DISP,DIAS_VAC_UTILIZAD,DIRECCION,DESCRIPCION,TEL_HABITACION,TEL_MOVIL,E_MAIL,PUESTO,SALARIO,ESTADO")] EMPLEADOS eMPLEADOS)
+        public ActionResult Create([Bind(Include = "EMP_ID,ID_EMPLEADO,CEDULA,NOMBRE,APE1,APE2,DIRECCION,DESCRIPCION,TEL_HABITACION,TEL_MOVIL,E_MAIL,PUESTO,SALARIO,ESTADO")] EMPLEADOS eMPLEADOS)
         {
             if (ModelState.IsValid)
             {
                 db.EMPLEADOS.Add(eMPLEADOS);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    TempData["Error"] = "Se debe de seleccionar un puesto.Si no es posible seleccionar alguno, probablemente, los puestos existentes se encuentren inactivas o no existe ninguno.";
+                    return RedirectToAction("Create");
+                }
+                TempData["Success"] = "¡El empleado ha sido creado exitosamente!";
+                return RedirectToAction("Create");
             }
 
-            ViewBag.PUESTO = new SelectList(db.PUESTOS, "PTS_ID", "ID_PUESTO", eMPLEADOS.PUESTO);
+            ViewBag.PUESTO = new SelectList(db.PUESTOS, "PTS_ID", "NOMBRE", eMPLEADOS.PUESTO);
             return View(eMPLEADOS);
+
+        }
+
+        [HttpPost]
+        public ActionResult formAction(string[] childChkbox)
+        {
+            if (childChkbox == null)
+            {
+                TempData["Error"] = "¡Se debe seleccionar al menos un empleado!";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                if (Request.Form["Detalles"] != null)
+                {
+                    if (childChkbox.Count() == 1)
+                    {
+                        return RedirectToAction("Details", "EMPLEADOS", new { id = childChkbox.First() });
+                    }
+                    else
+                    {
+                        TempData["Error"] = "¡Solamente es posible ver los detalles de un empleado a la vez!";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else if (Request.Form["Editar"] != null)
+                {
+
+                    if (childChkbox.Count() == 1)
+                    {
+                        return RedirectToAction("Edit", "EMPLEADOS", new { id = childChkbox.First() });
+                    }
+                    else
+                    {
+                        TempData["Error"] = "¡Solamente es posible editar un empleado a la vez!";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else if (Request.Form["Inhabilitar"] != null)
+                {
+                    foreach (var i in childChkbox)
+                    {
+                        var emp = db.EMPLEADOS.Find(Int32.Parse(i));
+                        emp.ESTADO = "Inactivo";
+                        db.SaveChanges();
+                    }
+                    TempData["Success"] = "¡Se ha cambiado el estado de el o los Empleados seleccionados exitosamente!";
+                    return RedirectToAction("Index");
+                }
+
+                else if (Request.Form["Habilitar"] != null)
+                {
+                    foreach (var i in childChkbox)
+                    {
+                        var emp = db.EMPLEADOS.Find(Int32.Parse(i));
+                        emp.ESTADO = "Activo";
+                        db.SaveChanges();
+                    }
+                    TempData["Success"] = "¡Se ha cambiado el estado de el o los Empleados seleccionados exitosamente!";
+                    return RedirectToAction("Index");
+                }
+                return View();
+            }
         }
 
         // GET: EMPLEADOS/Edit/5
@@ -73,7 +189,7 @@ namespace HRM_DEV.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.PUESTO = new SelectList(db.PUESTOS, "PTS_ID", "ID_PUESTO", eMPLEADOS.PUESTO);
+            viewBagPuestos();
             return View(eMPLEADOS);
         }
 
@@ -82,42 +198,38 @@ namespace HRM_DEV.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EMP_ID,ID_EMPLEADO,CEDULA,NOMBRE,APE1,APE2,FECHA_NAC,FECHA_CONTR,DIAS_VAC_DISP,DIAS_VAC_UTILIZAD,DIRECCION,DESCRIPCION,TEL_HABITACION,TEL_MOVIL,E_MAIL,PUESTO,SALARIO,ESTADO")] EMPLEADOS eMPLEADOS)
+        public ActionResult Edit([Bind(Include = "EMP_ID,ID_EMPLEADO,CEDULA,NOMBRE,APE1,APE2,DIRECCION,DESCRIPCION,TEL_HABITACION,TEL_MOVIL,E_MAIL,PUESTO,SALARIO,ESTADO")] EMPLEADOS eMPLEADOS)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(eMPLEADOS).State = EntityState.Modified;
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    TempData["Error"] = "Se debe de seleccionar un puesto.Si no es posible seleccionar alguno, probablemente, los puestos existentes se encuentren inactivas o no existe ninguno.";
+                    return RedirectToAction("Index");
+                }
+                TempData["Success"] = "¡La información del empleado ha sido editada exitosamente!";
                 return RedirectToAction("Index");
             }
-            ViewBag.PUESTO = new SelectList(db.PUESTOS, "PTS_ID", "ID_PUESTO", eMPLEADOS.PUESTO);
+            ViewBag.PUESTO = new SelectList(db.PUESTOS, "PTS_ID", "NOMBRE", eMPLEADOS.PUESTO);
             return View(eMPLEADOS);
         }
 
-        // GET: EMPLEADOS/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Expediente(string searchString)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            EMPLEADOS eMPLEADOS = db.EMPLEADOS.Find(id);
-            if (eMPLEADOS == null)
-            {
-                return HttpNotFound();
-            }
-            return View(eMPLEADOS);
-        }
+            var EMP = from d in db.EMPLEADOS
+                      select d;
 
-        // POST: EMPLEADOS/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            EMPLEADOS eMPLEADOS = db.EMPLEADOS.Find(id);
-            db.EMPLEADOS.Remove(eMPLEADOS);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                EMP = EMP.Where(s => s.CEDULA.Contains(searchString));
+            }
+
+            return View("Expediente", EMP);
         }
 
         protected override void Dispose(bool disposing)
@@ -127,6 +239,62 @@ namespace HRM_DEV.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+
+        //Buscar un empleado en específico.
+
+        public string CrearID()
+        {
+            int cont = 0;
+            string dia = @DateTime.Now.Day.ToString();
+            string mes = @DateTime.Now.Month.ToString();
+            string año = DateTime.Now.Year.ToString();
+            string fecha = dia + mes + año;
+            if (db.EMPLEADOS.Count() == 0)
+            {
+                return cont + "-" + fecha;
+            }
+            else
+            {
+                while (cont != db.EMPLEADOS.Count())
+                {
+                    cont++;
+                    cont.ToString();
+                }
+                return cont + "-" + fecha;
+            }
+        }
+
+        [HttpPost]
+        public JsonResult doesUserNameExist(string UserName)
+        {
+
+            var user = from e in db.EMPLEADOS
+                       select e;
+
+            if (!String.IsNullOrEmpty(UserName))
+            {
+                user = user.Where(s => s.NOMBRE.Contains(UserName));
+            }
+
+            return Json(user == null);
+        }
+
+        public void viewBagPuestos()
+        {
+            List<object> PUESTOS = new List<Object>();
+            var PTS = db.PUESTOS;
+            foreach (var i in PTS)
+            {
+                var DEP = db.DEPARTAMENTOS.Find(i.DEPARTAMENTO);
+                var EMP = db.EMPRESAS.Find(DEP.EMPRESA);
+                if (EMP.ESTADO.Equals("Activo"))
+                {
+                    PUESTOS.Add(i);
+                }
+            }
+            ViewBag.PUESTO = new SelectList(PUESTOS, "PTS_ID", "NOMBRE");
         }
     }
 }

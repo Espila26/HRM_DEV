@@ -366,7 +366,6 @@
     <Content Include="Views\PUESTOS\Edit.cshtml" />
     <Content Include="Views\PUESTOS\Index.cshtml" />
     <Content Include="Views\EMPLEADOS\Create.cshtml" />
-    <Content Include="Views\EMPLEADOS\Delete.cshtml" />
     <Content Include="Views\EMPLEADOS\Details.cshtml" />
     <Content Include="Views\EMPLEADOS\Edit.cshtml" />
     <Content Include="Views\EMPLEADOS\Index.cshtml" />
