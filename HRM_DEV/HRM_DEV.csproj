@@ -44,6 +44,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.11.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.11\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.11.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.11\lib\itextsharp.xmlworker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -204,6 +212,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PUESTOSController.cs" />
+    <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -275,6 +284,7 @@
     <Content Include="Content\EstiloFormularioASP.css" />
     <Content Include="Content\EstiloMantenimiento.css" />
     <Content Include="Content\EstiloPrincipal.css" />
+    <Content Include="Content\EstiloReporte.css" />
     <Content Include="Content\EstiloTabla.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -379,6 +389,13 @@
     <Content Include="Views\EMPLEADOS\Details.cshtml" />
     <Content Include="Views\EMPLEADOS\Edit.cshtml" />
     <Content Include="Views\EMPLEADOS\Index.cshtml" />
+    <Content Include="Views\Reportes\GenerarReporte.cshtml" />
+    <Content Include="Views\Reportes\ReporteAmonestaciones.cshtml" />
+    <Content Include="Views\Reportes\ReporteAscensos.cshtml" />
+    <Content Include="Views\Reportes\ReporteEmpleados.cshtml" />
+    <Content Include="Views\Reportes\ReportePermisos.cshtml" />
+    <Content Include="Views\Reportes\ReporteSuspensiones.cshtml" />
+    <Content Include="Views\Reportes\ReporteVacaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
