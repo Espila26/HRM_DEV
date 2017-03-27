@@ -1,8 +1,9 @@
 ﻿@model HRM_DEV.Models.EMPLEADOS
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "DetailsExp";
 }
+@Styles.Render("~/Content/EstiloExpediente.css")
 @Styles.Render("~/Content/EstiloFormulario.css")
 @Styles.Render("~/Content/EstiloBoton.css")
 @Styles.Render("~/Content/EstiloDetails.css")
@@ -12,6 +13,9 @@
 </div>
 
 <div>
+    <br></br>
+    <br></br>
+    <hr />
 
     <button class="accordion">Información Personal</button>
     <div class="panel">
@@ -148,13 +152,34 @@
             </dd>
         </dl>
 
+        <dl class="form-group">
+            <dt>
+                @Html.DisplayNameFor(model => model.DIAS_VAC_DISP)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DIAS_VAC_DISP)
+            </dd>
+
+        </dl>
+
+        <dl class="form-group">
+            <dt>
+                @Html.DisplayNameFor(model => model.DIAS_VAC_UTILIZAD)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DIAS_VAC_UTILIZAD)
+            </dd>
+        </dl>
+
         <br></br>
 
     </div>
 
     <div class="form-group">
-        <input type="button" class="myButton" value="Editar" onclick="location.href='@Url.Action("Edit", "EMPLEADOS", new { id = Model.EMP_ID })'" />
-        <input type="button" class="myButton" value="Regresar" onclick="location.href='@Url.Action("Index", "EMPLEADOS")'" />
+        @*<input type="button" class="myButton" value="Editar" onclick="location.href='@Url.Action("Edit", "EMPLEADOS", new { id = Model.EMP_ID })'" />*@
+        <input type="button" class="myButton" value="Regresar" onclick="location.href='@Url.Action("Expediente", "Expedientes")'" />
     </div>
 </div>
 
@@ -171,3 +196,4 @@
         }
     </script>
 }
+    </div>
