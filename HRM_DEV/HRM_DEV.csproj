@@ -280,6 +280,15 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Imagenes\acciones.png" />
+    <Content Include="Imagenes\conexus.png" />
+    <Content Include="Imagenes\conexus3.png" />
+    <Content Include="Imagenes\departamentos.png" />
+    <Content Include="Imagenes\empresas.png" />
+    <Content Include="Imagenes\flecha.png" />
+    <Content Include="Imagenes\home.png" />
+    <Content Include="Imagenes\personal.png" />
+    <Content Include="Imagenes\puestos.png" />
     <Content Include="Models\Entities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Entities.edmx</DependentUpon>

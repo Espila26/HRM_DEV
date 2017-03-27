@@ -15,10 +15,51 @@ namespace HRM_DEV.Controllers
         private hrm_dbEntities db = new hrm_dbEntities();
 
         // GET: DEPARTAMENTOS
-        public ActionResult Index()
+        /*
+         El metodo index es el encargado de mostrar los datos de los departamentos en la pantalla principal,
+         ademas, proporciona la capacidad de hacer busquedas refinadas que le permiten al usuario manejar facilmente
+         la información de los departamentos.
+         */
+        public ActionResult Index(string searchString) //searchString: parametro de busqueda
         {
-            var dEPARTAMENTOS = db.DEPARTAMENTOS.Include(d => d.EMPRESAS);
-            return View(dEPARTAMENTOS.ToList());
+            var DEP = from d in db.DEPARTAMENTOS
+                      select d;
+
+            //validación para verificar la existencia del criterio de busqueda
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                //Muestra los departamentos por el estado que el usuario definió previamente
+                if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                {
+                    DEP = DEP.Where(s => s.ESTADO.Equals(searchString));
+                }
+
+                else if (searchString.Equals("Todo"))
+                {
+                    DEP = DEP.Where(s => s.ESTADO.Contains("tiv"));
+                }
+
+                else if (searchString.Equals("Seleccione"))
+                {
+                    TempData["Error"] = "¡Debe seleccionar los departamentos que desea ver!";
+                    return RedirectToAction("Index");
+                }
+
+                //Muestra los departamentos que coincidan con el nombre que el usuario desea ver.
+                else
+                {
+                    DEP = DEP.Where(s => s.NOMBRE.Contains(searchString));
+                }
+
+                //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
+                if (DEP.Count() == 0)
+                {
+                    TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View(DEP);
         }
 
         // GET: DEPARTAMENTOS/Details/5
@@ -39,7 +80,7 @@ namespace HRM_DEV.Controllers
         // GET: DEPARTAMENTOS/Create
         public ActionResult Create()
         {
-            ViewBag.EMPRESA = new SelectList(db.EMPRESAS, "ID_EMPRESA", "NOMBRE");
+            viewBagEmpresas();
             return View();
         }
 
@@ -53,12 +94,22 @@ namespace HRM_DEV.Controllers
             if (ModelState.IsValid)
             {
                 db.DEPARTAMENTOS.Add(dEPARTAMENTOS);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    TempData["Error"] = "Se debe de seleccionar una empresa. Si no es posible seleccionar alguna, probablemente, las empresas existentes se encuentren inactivas o no existe ninguna.";
+                    return RedirectToAction("Create");
+                }
+                TempData["Success"] = "¡El Departamento ha sido creado exitosamente!";
+                return RedirectToAction("Create");
             }
 
-            ViewBag.EMPRESA = new SelectList(db.EMPRESAS, "ID_EMPRESA", "NOMBRE", dEPARTAMENTOS.EMPRESA);
+            viewBagEmpresas();
             return View(dEPARTAMENTOS);
+
         }
 
         // GET: DEPARTAMENTOS/Edit/5
@@ -73,7 +124,7 @@ namespace HRM_DEV.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EMPRESA = new SelectList(db.EMPRESAS, "ID_EMPRESA", "NOMBRE", dEPARTAMENTOS.EMPRESA);
+            viewBagEmpresas();
             return View(dEPARTAMENTOS);
         }
 
@@ -87,37 +138,21 @@ namespace HRM_DEV.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(dEPARTAMENTOS).State = EntityState.Modified;
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    TempData["Error"] = "Se debe de seleccionar una empresa.Si no es posible seleccionar alguna, probablemente, las empresas existentes se encuentren inactivas o no existe ninguna.";
+                    return RedirectToAction("Index");
+                }
                 db.SaveChanges();
+                TempData["Success"] = "¡La información del departamento ha sido editada exitosamente!";
                 return RedirectToAction("Index");
             }
-            ViewBag.EMPRESA = new SelectList(db.EMPRESAS, "ID_EMPRESA", "NOMBRE", dEPARTAMENTOS.EMPRESA);
+            viewBagEmpresas();
             return View(dEPARTAMENTOS);
-        }
-
-        // GET: DEPARTAMENTOS/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DEPARTAMENTOS dEPARTAMENTOS = db.DEPARTAMENTOS.Find(id);
-            if (dEPARTAMENTOS == null)
-            {
-                return HttpNotFound();
-            }
-            return View(dEPARTAMENTOS);
-        }
-
-        // POST: DEPARTAMENTOS/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            DEPARTAMENTOS dEPARTAMENTOS = db.DEPARTAMENTOS.Find(id);
-            db.DEPARTAMENTOS.Remove(dEPARTAMENTOS);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
@@ -128,5 +163,98 @@ namespace HRM_DEV.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpPost]
+        public ActionResult formAction(string[] childChkbox)
+        {
+            if (childChkbox == null)
+            {
+                TempData["Error"] = "¡Se debe seleccionar al menos un departamento!";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                if (Request.Form["Detalles"] != null)
+                {
+                    if (childChkbox.Count() == 1)
+                    {
+                        return RedirectToAction("Details", "Departamentos", new { id = childChkbox.First() });
+                    }
+                    else
+                    {
+                        TempData["Error"] = "¡Solamente es posible ver detalles de un departamento a la vez!";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else if (Request.Form["Editar"] != null)
+                {
+
+                    if (childChkbox.Count() == 1)
+                    {
+                        return RedirectToAction("Edit", "Departamentos", new { id = childChkbox.First() });
+                    }
+                    else
+                    {
+                        TempData["Error"] = "¡Solamente es posible editar un departamento a la vez!";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else if (Request.Form["Inhabilitar"] != null)
+                {
+                    var PTS = from p in db.PUESTOS
+                              select p;
+                    var EMPL = from e in db.EMPLEADOS
+                               select e;
+                    foreach (var i in childChkbox)
+                    {
+                        var dep = db.DEPARTAMENTOS.Find(Int32.Parse(i));
+                        dep.ESTADO = "Inactivo";
+                        foreach (var p in PTS)
+                        {
+                            if (p.DEPARTAMENTO == dep.ID_DEPARTAMENTO)
+                            {
+                                p.ESTADO = "Inactivo";
+                                foreach (var e in EMPL)
+                                {
+                                    if (e.PUESTO == p.PTS_ID)
+                                        e.ESTADO = "Inactivo";
+                                }
+                            }
+                        }
+                        db.SaveChanges();
+                    }
+                    TempData["Success"] = "¡Se ha cambiado el estado de el o los Departamentos seleccionados exitosamente!";
+                    return RedirectToAction("Index");
+                }
+
+                else if (Request.Form["Habilitar"] != null)
+                {
+                    foreach (var i in childChkbox)
+                    {
+                        var dep = db.DEPARTAMENTOS.Find(Int32.Parse(i));
+                        dep.ESTADO = "Activo";
+                        db.SaveChanges();
+                    }
+                    TempData["Success"] = "¡Se ha cambiado el estado de el o los Departamentos seleccionados exitosamente!";
+                    return RedirectToAction("Index");
+                }
+                return View();
+            }
+        }
+
+        public void viewBagEmpresas()
+        {
+            List<object> EMPRESAS = new List<Object>();
+            var EMP = db.EMPRESAS;
+            foreach (var i in EMP)
+            {
+                if (i.ESTADO.Equals("Activo"))
+                {
+                    EMPRESAS.Add(i);
+                }
+            }
+            ViewBag.EMPRESA = new SelectList(EMPRESAS, "ID_EMPRESA", "NOMBRE");
+        }
+
     }
 }
