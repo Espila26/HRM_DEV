@@ -214,6 +214,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PUESTOSController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
+    <Compile Include="Controllers\USUARIOSController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -404,6 +405,11 @@
     <Content Include="Views\Expedientes\IndexAsc.cshtml" />
     <Content Include="Views\Expedientes\IndexPerm.cshtml" />
     <Content Include="Views\Expedientes\IndexSusp.cshtml" />
+    <Content Include="Views\USUARIOS\Create.cshtml" />
+    <Content Include="Views\USUARIOS\Delete.cshtml" />
+    <Content Include="Views\USUARIOS\Details.cshtml" />
+    <Content Include="Views\USUARIOS\Edit.cshtml" />
+    <Content Include="Views\USUARIOS\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
