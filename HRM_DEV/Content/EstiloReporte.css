@@ -1,6 +1,22 @@
 ﻿body {
 }
 
+.titulos{
+    font-family:sans-serif;
+    font-weight:bold;
+    font-size: 25px;
+    width: 100%;
+    height: 5%;
+    text-align: center;
+    position: absolute;
+    top: 0%;
+}
+#botonReporte{
+
+    width: 11%;
+
+}
+
 .contenedorFiltros{
 
     padding-top:3em;
@@ -46,7 +62,7 @@
     height: 10%;
     width: 22%;
     position:absolute;
-    left: 59%;
+    left: 69%;
     border: #9998A1 3px solid;
     border-radius: 5px; 
 }
@@ -67,7 +83,7 @@
 .comboboxIzquierda {
   height: 11%;
   width: 23%;
-  left: 59%;
+  left: 69%;
   padding-left: 6px;
   font-size: 14px;
   vertical-align: middle;
@@ -81,7 +97,7 @@
 
     padding-top:0.5em;
     position:absolute;
-    left: 44%;
+    left: 54%;
     font-weight:bold;
     font-size:16px;
 }

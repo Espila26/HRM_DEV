@@ -11,8 +11,8 @@
 {
 
     <div class="contenedorFiltros">
-        <h2>GenerarReporte</h2>
-
+		<p class="titulos">Generar reporte de ascensos</p>
+		<br></br>
         <div class="filtro">
             <label class="label">Empleado:</label>
             <div class="divInput">
@@ -121,7 +121,7 @@
     .contenedorGrid {
         width: 100%;
         position: absolute;
-        top: 37%;
+        top: 42%;
     }
 
     #pager a {
@@ -174,8 +174,8 @@
         </div>
         <br />
         <div>
-            <input type="button" value="Exportar a Excel" onclick="location.href='@Url.Action("ExportarExcel", "Reportes")'" class="myButton" />
-            <input type="button" value="Exportar a PDF" onclick="location.href='@Url.Action("ExportarPDF", "Reportes")'" class="myButton" />
+            <input type="button" value="Exportar a Excel" onclick="location.href='@Url.Action("ExportarExcel", "Reportes")'" class="myButton" id="botonReporte"/>
+            <input type="button" value="Exportar a PDF" onclick="location.href='@Url.Action("ExportarPDF", "Reportes")'" class="myButton" id="botonReporte"/>
         </div>
 
     }
