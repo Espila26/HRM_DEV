@@ -1,9 +1,4 @@
-﻿@{
-    var varUser = (HRM_DEV.Models.USUARIOS)Session["usuarios"];
- }
-
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -21,67 +16,47 @@
         <header>
             <span class="Home"></span>
             <h1>@Html.ActionLink("HR-Manager", "Index", "Home", null, new { @class = "h1Letra" })</h1>
-            <h2>Bienvenido(a): @varUser.NOMBRE_USUARIO</h2>
+            <h2>Bienvenido(a): Usuario</h2>
             <a class='boton' href='@Url.Action("Index","Home")'></a>
         </header>
         <aside>
             <table>
 
-                @if (varUser.ACC_EMPRESA.Equals("Si"))
-                {
-                    <tr class="TrOpciones">
-                        <td class="Seleccion"></td>
-                        <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "EMPRESAS")'"><spam class="Icono" id="Empresas"></spam> Empresas</td>
-                    </tr>
-                }
+                <tr class="TrOpciones">
+                    <td class="Seleccion"></td>
+                    <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "EMPRESAS")'"><spam class="Icono" id="Empresas"></spam> Empresas</td>
+                </tr>
 
-                @if (varUser.ACC_DEPART.Equals("Si"))
-                {
-                    <tr class="TrOpciones">
-                        <td class="Seleccion"></td>
-                        <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "DEPARTAMENTOS")'"><spam class="Icono" id="Departamentos"></spam>Departamentos</td>
-                    </tr>
-                }
+                <tr class="TrOpciones">
+                    <td class="Seleccion"></td>
+                    <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "DEPARTAMENTOS")'"><spam class="Icono" id="Departamentos"></spam>Departamentos</td>
+                </tr>
 
-                @if (varUser.ACC_PUESTOS.Equals("Si"))
-                {
-                    <tr class="TrOpciones">
-                        <td class="Seleccion"></td>
-                        <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "PUESTOS")'"><spam class="Icono" id="Puestos"></spam> Puestos</td>
-                    </tr>
-                }
+                <tr class="TrOpciones">
+                    <td class="Seleccion"></td>
+                    <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "PUESTOS")'"><spam class="Icono" id="Puestos"></spam> Puestos</td>
+                </tr>
 
-                @if (varUser.ACC_EMPLEADOS.Equals("Si"))
-                {
+                <tr class="TrOpciones">
+                    <td class="Seleccion"></td>
+                    <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "EMPLEADOS")'"><spam class="Icono" id="Personal"></spam> Personal</td>
+                </tr>
 
-                    <tr class="TrOpciones">
-                        <td class="Seleccion"></td>
-                        <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "EMPLEADOS")'"><spam class="Icono" id="Personal"></spam> Personal</td>
-                    </tr>
+                <tr class="TrOpciones">
+                    <td class="Seleccion"></td>
+                    <td class="TDOpciones" onclick="location.href='@Url.Action("Expediente", "Expedientes")'"><spam class="Icono" id="Acciones"></spam> Expediente Laboral</td>
+                </tr>
 
-                }
+                <tr class="TrOpciones">
+                    <td class="Seleccion"></td>
+                    <td class="TDOpciones" onclick="location.href='@Url.Action("GenerarReporte", "Reportes")'"><spam class="Icono" id="Reportes"></spam>Reportes</td>
+                </tr>
 
-                @if (varUser.ACC_ACCIONES.Equals("Si"))
-                {
+                <tr class="TrOpciones">
+                    <td class="Seleccion"></td>
+                    <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "USUARIOS")'"><spam class="Icono" id="Usuarios"></spam>Usuarios</td>
+                </tr>
 
-                    <tr class="TrOpciones">
-                        <td class="Seleccion"></td>
-                        <td class="TDOpciones" onclick="location.href='@Url.Action("Expediente", "Expedientes")'"><spam class="Icono" id="Acciones"></spam> Expediente Laboral</td>
-                    </tr>
-
-                    <tr class="TrOpciones">
-                        <td class="Seleccion"></td>
-                        <td class="TDOpciones" onclick="location.href='@Url.Action("GenerarReporte", "Reportes")'"><spam class="Icono" id="Reportes"></spam> Reportes</td>
-                    </tr>
-                }
-
-                @if (varUser.ACC_EMPRESA.Equals("Si"))
-                {
-                    <tr class="TrOpciones">
-                        <td class="Seleccion"></td>
-                        <td class="TDOpciones" onclick="location.href='@Url.Action("Index", "USUARIOS")'"><spam class="Icono" id="Usuarios"></spam> Usuarios</td>
-                    </tr>
-                }
             </table>
 
             <img src="~/Imagenes/conexus3.png">

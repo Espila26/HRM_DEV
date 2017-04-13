@@ -5,6 +5,8 @@
 @Styles.Render("~/Content/EstiloBoton.css")
 @Styles.Render("~/Content/EstiloReporte.css")
 
+
+
 @using (Html.BeginForm("Generar", "Reportes"))
 {
 
@@ -41,12 +43,14 @@
             <input class="checkBox" type="checkbox" name="check" id="check" value="1" onchange="javascript:showContent()" />
         </div>
         <div class="divInput" id="content" style="display: none;">
-            <label class="labelIzquierda">Accion de Personal:</label>
+            <label class="labelIzquierda">Acción de Personal:</label>
             @Html.DropDownList("accion", new SelectList(new List<Object> { { "Amonestaciones" }, { "Ascensos" }, { "Permisos" }, { "Suspensiones" }, { "Vacaciones" } }), "-- Por favor seleccione una accion--", new { @class = "comboboxIzquierda" })
-        </div>    
+        </div>   
+       
     </div>
+
 </div>
-<button type="submit" id="generar" class="myButton">Generar</button>
+ <button type="submit" id="generar" class="myButton">Generar</button> 
 
 }
 

@@ -46,7 +46,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.LabelFor(model => model.ROL, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.DropDownList("Rol", new SelectList(new List<Object> { { "1" }, { "2" } }), "-- seleccione --", new { @class = "combobox" })
+                @Html.DropDownList("Rol", new SelectList(new List<Object> { { "User" }, { "Root" } }), "-- seleccione --", new { @class = "combobox" })
             </div>
             @Html.ValidationMessageFor(model => model.ROL, "", new { @class = "text-danger" })
         </div>
@@ -54,7 +54,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.LabelFor(model => model.ACC_EMPRESA, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.DropDownList("Acceso a Empresas", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione --", new { @class = "combobox" })
+                @Html.DropDownList("ACC_EMPRESA", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione --", new { @class = "combobox" })
             </div>
             @Html.ValidationMessageFor(model => model.ACC_EMPRESA, "", new { @class = "text-danger" })
         </div>
@@ -62,7 +62,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.LabelFor(model => model.ACC_DEPART, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.DropDownList("Acceso a Departamentos", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione --", new { @class = "combobox" })
+                @Html.DropDownList("ACC_DEPART", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione --", new { @class = "combobox" })
             </div>
             @Html.ValidationMessageFor(model => model.ACC_DEPART, "", new { @class = "text-danger" })
         </div>
@@ -70,7 +70,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.LabelFor(model => model.ACC_PUESTOS, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.DropDownList("Acceso a Puestos", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione --", new { @class = "combobox" })
+                @Html.DropDownList("ACC_PUESTOS", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione --", new { @class = "combobox" })
             </div>
             @Html.ValidationMessageFor(model => model.ACC_PUESTOS, "", new { @class = "text-danger" })
         </div>
@@ -78,7 +78,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.LabelFor(model => model.ACC_EMPLEADOS, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.DropDownList("Acceso a Empleados", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione  --", new { @class = "combobox" })
+                @Html.DropDownList("ACC_EMPLEADOS", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione  --", new { @class = "combobox" })
             </div>
             @Html.ValidationMessageFor(model => model.ACC_EMPLEADOS, "", new { @class = "text-danger" })
         </div>
@@ -86,7 +86,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.LabelFor(model => model.ACC_ACCIONES, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.DropDownList("Acceso a Expediente", new SelectList(new List<Object> { { "Si" }, { "No" } }), "-- seleccione  --", new { @class = "combobox" })
+                @Html.DropDownList("ACC_ACCIONES", new SelectList(new List<Object> { { "Si" }, { "No" } }), "-- seleccione  --", new { @class = "combobox" })
             </div>
             @Html.ValidationMessageFor(model => model.ACC_ACCIONES, "", new { @class = "text-danger" })
         </div>
@@ -94,20 +94,20 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.LabelFor(model => model.ACC_USUARIO, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.DropDownList("Acceso a Usuarios", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione --", new { @class = "combobox" })
+                @Html.DropDownList("ACC_USUARIO", new SelectList(new List<Object> { { "Si" }, { "No" } }), "--  seleccione --", new { @class = "combobox" })
             </div>
             @Html.ValidationMessageFor(model => model.ACC_USUARIO, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="myButton" />
+                <input type="submit" value="Guardar" class="myButton" onClick="return Confirmar('¿Esta Seguro(a) de que desea modificar la información de este usuario?', 'guardar');" />
+                <input id="guardar" class="btnInvisible" type="submit" value="Guardar" />
                 <input type="button" class="myButton" value="Regresar" onclick="location.href='@Url.Action("Index", "USUARIOS")'" />
             </div>
         </div>
     </div>
 }
-
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

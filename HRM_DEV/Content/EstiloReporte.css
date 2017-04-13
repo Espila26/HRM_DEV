@@ -124,3 +124,10 @@ input[type=checkbox]
     left:38%;
     top: 30%;
 }
+.titulos{
+    font-family:sans-serif;
+    font-weight:bold;
+    font-size: 25px;
+    position: fixed;
+    left: 50%;
+}
