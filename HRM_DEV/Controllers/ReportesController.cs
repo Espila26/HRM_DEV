@@ -136,31 +136,42 @@ namespace HRM_DEV.Controllers
         {
 
             string gridData = "";
+            string tipoReporte = "";
+
             TempData.Keep("Accion");
+            TempData.Keep("desde");
+            TempData.Keep("hasta");
+            TempData.Keep("datoEmpleado");
+            TempData.Keep("estado");
 
             switch (TempData["Accion"].ToString())
             {
                 case "Vacaciones":
                     gridData = gridVacaciones();
+                    tipoReporte = "vacaciones";
                     break;
                 case "Amonestaciones":
                     gridData = gridAmonestaciones();
+                    tipoReporte = "amonestaciones";
                     break;
                 case "Ascensos":
                     gridData = gridAscensos();
+                    tipoReporte = "ascensos";
                     break;
                 case "Permisos":
                     gridData = gridPermisos();
+                    tipoReporte = "permisos";
                     break;
                 case "Suspensiones":
                     gridData = gridSuspensiones();
+                    tipoReporte = "suspensiones";
                     break;
                 default:
                     gridData = gridEmpleados();
+                    tipoReporte = "empleados";
                     break;
             }
-
-            string exportData = String.Format("<html><head>{0}</head><body>{1}</body></html>", "<style>table{ border-spacing: 10px; border-collapse: separate; }</style>", gridData);
+            string exportData = String.Format("<html><head>{0}</head><body><p>Reporte de " + tipoReporte + "</p>{1}</body></html>", "<style>table{ text-align: center; border-collapse: collapse; width: 100%; height:100%; background: #fff overflow: auto; border: 1px solid #000000; font: normal 12px/150% Arial, Helvetica, sans-serif;} th{background - color: #5C5C5C;font - weight: bold;color: White !important;    background-color:#5C5C5C;color:#FFFFFF; padding: 5px; border: 1px solid black; border - right: 1px solid #A3A3A3; padding: 10px;} td{ border: 1px solid #000000; padding: 10px;} p{font-family:sans-serif;font-weight:bold;font-size:25px;position:absolute;left:50%;}</style>", gridData);
             var bytes = System.Text.Encoding.UTF8.GetBytes(exportData);
 
             using (var input = new MemoryStream(bytes))
@@ -181,11 +192,18 @@ namespace HRM_DEV.Controllers
 
         public string gridVacaciones()
         {
-            List<VACACIONES> listVacaciones = new List<VACACIONES>();
+            var generarDesde = GenerarDesde(TempData["desde"].ToString());
+            var generarHasta = GenerarHasta(TempData["hasta"].ToString());
 
-            listVacaciones = db.VACACIONES.ToList();
+            string datoEmpleado = TempData["datoEmpleado"].ToString();
+            string Estado = TempData["estado"].ToString();
 
-            WebGrid grid = new WebGrid(source: listVacaciones, canPage: false, canSort: false);
+            var Vacaciones = from e in db.VACACIONES
+                      select e;
+
+            Vacaciones = Vacaciones.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
+
+            WebGrid grid = new WebGrid(source: Vacaciones, canPage: false, canSort: false);
 
             string gridData = grid.GetHtml(
             columns: grid.Columns(
@@ -201,9 +219,16 @@ namespace HRM_DEV.Controllers
 
         public string gridAmonestaciones()
         {
-            List<AMONESTACIONES> Amonestaciones = new List<AMONESTACIONES>();
+            var generarDesde = GenerarDesde(TempData["desde"].ToString());
+            var generarHasta = GenerarHasta(TempData["hasta"].ToString());
 
-            Amonestaciones = db.AMONESTACIONES.ToList();
+            string datoEmpleado = TempData["datoEmpleado"].ToString();
+            string Estado = TempData["estado"].ToString();
+
+            var Amonestaciones = from e in db.AMONESTACIONES
+                       select e;
+
+            Amonestaciones = Amonestaciones.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
 
             WebGrid grid = new WebGrid(source: Amonestaciones, canPage: false, canSort: false);
 
@@ -223,9 +248,17 @@ namespace HRM_DEV.Controllers
 
         public string gridAscensos()
         {
-            List<ASCENSOS> Ascensos = new List<ASCENSOS>();
 
-            Ascensos = db.ASCENSOS.ToList();
+            var generarDesde = GenerarDesde(TempData["desde"].ToString());
+            var generarHasta = GenerarHasta(TempData["hasta"].ToString());
+
+            string datoEmpleado = TempData["datoEmpleado"].ToString();
+            string Estado = TempData["estado"].ToString();
+
+            var Ascensos = from e in db.ASCENSOS
+                      select e;
+
+            Ascensos = Ascensos.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
 
             WebGrid grid = new WebGrid(source: Ascensos, canPage: false, canSort: false);
 
@@ -245,9 +278,17 @@ namespace HRM_DEV.Controllers
 
         public string gridPermisos()
         {
-            List<PERMISOS> Permisos = new List<PERMISOS>();
 
-            Permisos = db.PERMISOS.ToList();
+            var generarDesde = GenerarDesde(TempData["desde"].ToString());
+            var generarHasta = GenerarHasta(TempData["hasta"].ToString());
+
+            string datoEmpleado = TempData["datoEmpleado"].ToString();
+            string Estado = TempData["estado"].ToString();
+
+            var Permisos = from e in db.PERMISOS
+                      select e;
+
+            Permisos = Permisos.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
 
             WebGrid grid = new WebGrid(source: Permisos, canPage: false, canSort: false);
 
@@ -267,9 +308,17 @@ namespace HRM_DEV.Controllers
 
         public string gridSuspensiones()
         {
-            List<SUSPENSIONES> Suspensiones = new List<SUSPENSIONES>();
 
-            Suspensiones = db.SUSPENSIONES.ToList();
+            var generarDesde = GenerarDesde(TempData["desde"].ToString());
+            var generarHasta = GenerarHasta(TempData["hasta"].ToString());
+
+            string datoEmpleado = TempData["datoEmpleado"].ToString();
+            string Estado = TempData["estado"].ToString();
+
+            var Suspensiones = from e in db.SUSPENSIONES
+                      select e;
+
+            Suspensiones = Suspensiones.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
 
             WebGrid grid = new WebGrid(source: Suspensiones, canPage: false, canSort: false);
 
@@ -288,11 +337,19 @@ namespace HRM_DEV.Controllers
 
         public string gridEmpleados()
         {
-            List<EMPLEADOS> Empleados = new List<EMPLEADOS>();
 
-            Empleados = db.EMPLEADOS.ToList();
+            var generarDesde = GenerarDesde(TempData["desde"].ToString());
+            var generarHasta = GenerarHasta(TempData["hasta"].ToString());
 
-            WebGrid grid = new WebGrid(source: Empleados, canPage: false, canSort: false);
+            string datoEmpleado = TempData["datoEmpleado"].ToString();
+            string Estado = TempData["estado"].ToString();
+
+            var Emp = from e in db.EMPLEADOS
+                      select e;
+
+            Emp = Emp.Where(s => (s.NOMBRE.Contains(datoEmpleado) || s.APE1.Contains(datoEmpleado) || s.APE2.Contains(datoEmpleado) || s.CEDULA.Contains(datoEmpleado)) && (s.ESTADO.Contains(Estado)) && (s.FECHA_CONTR >= generarDesde) && (s.FECHA_CONTR <= generarHasta));
+
+            WebGrid grid = new WebGrid(source: Emp, canPage: false, canSort: false);
 
             string gridData = grid.GetHtml(
             columns: grid.Columns(
@@ -302,7 +359,7 @@ namespace HRM_DEV.Controllers
                      grid.Column("APE2", "Segundo Apellido"),
                      grid.Column("TEL_MOVIL", "Teléfono Móvil"),
                      grid.Column("E_MAIL", "Correo Electrónico"),
-                     grid.Column("ESTADO", "Estado (Activo o Inactivo)")
+                     grid.Column("ESTADO", "Estado")
                             )).ToString();
             return gridData;
         }
@@ -314,7 +371,7 @@ namespace HRM_DEV.Controllers
             if (String.IsNullOrEmpty(desde))
             {
 
-                generarDesde = new DateTime(2017, 3, 17);
+                generarDesde = new DateTime(1017, 3, 17);
             }
             else
             {

@@ -211,6 +211,7 @@
     <Compile Include="Controllers\EMPRESASController.cs" />
     <Compile Include="Controllers\ExpedientesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PUESTOSController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
@@ -284,6 +285,7 @@
     <Content Include="Content\EstiloExpediente.css" />
     <Content Include="Content\EstiloFormulario.css" />
     <Content Include="Content\EstiloFormularioASP.css" />
+    <Content Include="Content\EstiloLogin.css" />
     <Content Include="Content\EstiloMantenimiento.css" />
     <Content Include="Content\EstiloPrincipal.css" />
     <Content Include="Content\EstiloReporte.css" />
@@ -294,6 +296,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Imagenes\acciones.png" />
     <Content Include="Imagenes\conexus.png" />
+    <Content Include="Imagenes\conexus1.png" />
     <Content Include="Imagenes\conexus3.png" />
     <Content Include="Imagenes\departamentos.png" />
     <Content Include="Imagenes\empresas.png" />
@@ -412,6 +415,7 @@
     <Content Include="Views\USUARIOS\Details.cshtml" />
     <Content Include="Views\USUARIOS\Edit.cshtml" />
     <Content Include="Views\USUARIOS\Index.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
