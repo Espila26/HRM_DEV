@@ -22,65 +22,89 @@ namespace HRM_DEV.Controllers
         */
         public ActionResult Index(string searchString)
         {
-            var EMP = from e in db.EMPRESAS
-                      select e;
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
 
-            //validación para verificar la existencia del criterio de busqueda
-            if (!String.IsNullOrEmpty(searchString))
+            if (Session["usuarios"] != null && varUser.ACC_EMPRESA.Equals("Si"))
             {
-                //Muestra las empresas por el estado que el usuario definió previamente
-                if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                var EMP = from e in db.EMPRESAS
+                          select e;
+
+                //validación para verificar la existencia del criterio de busqueda
+                if (!String.IsNullOrEmpty(searchString))
                 {
-                    EMP = EMP.Where(s => s.ESTADO.Equals(searchString));
+                    //Muestra las empresas por el estado que el usuario definió previamente
+                    if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                    {
+                        EMP = EMP.Where(s => s.ESTADO.Equals(searchString));
+                    }
+
+                    else if (searchString.Equals("Todo"))
+                    {
+                        EMP = EMP.Where(s => s.ESTADO.Contains("tiv"));
+                    }
+
+                    else if (searchString.Equals("Seleccione"))
+                    {
+                        TempData["Error"] = "¡Debe seleccionar las empresas que desea ver!";
+                        return RedirectToAction("Index");
+                    }
+
+                    //Muestra las empresas que coincidan con el nombre, apellidos o cedula que el usuario desea ver.
+                    else
+                    {
+                        EMP = EMP.Where(s => s.NOMBRE.Contains(searchString));
+                    }
+
+                    //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
+                    if (EMP.Count() == 0)
+                    {
+                        TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
+                        return RedirectToAction("Index");
+                    }
                 }
 
-                else if (searchString.Equals("Todo"))
-                {
-                    EMP = EMP.Where(s => s.ESTADO.Contains("tiv"));
-                }
-
-                else if (searchString.Equals("Seleccione"))
-                {
-                    TempData["Error"] = "¡Debe seleccionar las empresas que desea ver!";
-                    return RedirectToAction("Index");
-                }
-
-                //Muestra las empresas que coincidan con el nombre, apellidos o cedula que el usuario desea ver.
-                else
-                {
-                    EMP = EMP.Where(s => s.NOMBRE.Contains(searchString));
-                }
-
-                //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
-                if (EMP.Count() == 0)
-                {
-                    TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
-                    return RedirectToAction("Index");
-                }
+                return View(EMP);
             }
-
-            return View(EMP);
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: EMPRESAS/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_EMPRESA.Equals("Si"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                EMPRESAS eMPRESAS = db.EMPRESAS.Find(id);
+                if (eMPRESAS == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(eMPRESAS);
             }
-            EMPRESAS eMPRESAS = db.EMPRESAS.Find(id);
-            if (eMPRESAS == null)
-            {
-                return HttpNotFound();
-            }
-            return View(eMPRESAS);
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: EMPRESAS/Create
         public ActionResult Create()
         {
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_EMPRESA.Equals("Si"))
+            {
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
+
         }
 
         // POST: EMPRESAS/Create
@@ -188,16 +212,24 @@ namespace HRM_DEV.Controllers
         // GET: EMPRESAS/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_EMPRESA.Equals("Si"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                EMPRESAS eMPRESAS = db.EMPRESAS.Find(id);
+                if (eMPRESAS == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(eMPRESAS);
             }
-            EMPRESAS eMPRESAS = db.EMPRESAS.Find(id);
-            if (eMPRESAS == null)
-            {
-                return HttpNotFound();
-            }
-            return View(eMPRESAS);
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: EMPRESAS/Edit/5

@@ -22,66 +22,90 @@ namespace HRM_DEV.Controllers
          */
         public ActionResult Index(string searchString) //searchString: parametro de busqueda
         {
-            var DEP = from d in db.DEPARTAMENTOS
-                      select d;
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
 
-            //validación para verificar la existencia del criterio de busqueda
-            if (!String.IsNullOrEmpty(searchString))
+            if (Session["usuarios"] != null && varUser.ACC_DEPART.Equals("Si"))
             {
-                //Muestra los departamentos por el estado que el usuario definió previamente
-                if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                var DEP = from d in db.DEPARTAMENTOS
+                          select d;
+
+                //validación para verificar la existencia del criterio de busqueda
+                if (!String.IsNullOrEmpty(searchString))
                 {
-                    DEP = DEP.Where(s => s.ESTADO.Equals(searchString));
+                    //Muestra los departamentos por el estado que el usuario definió previamente
+                    if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                    {
+                        DEP = DEP.Where(s => s.ESTADO.Equals(searchString));
+                    }
+
+                    else if (searchString.Equals("Todo"))
+                    {
+                        DEP = DEP.Where(s => s.ESTADO.Contains("tiv"));
+                    }
+
+                    else if (searchString.Equals("Seleccione"))
+                    {
+                        TempData["Error"] = "¡Debe seleccionar los departamentos que desea ver!";
+                        return RedirectToAction("Index");
+                    }
+
+                    //Muestra los departamentos que coincidan con el nombre que el usuario desea ver.
+                    else
+                    {
+                        DEP = DEP.Where(s => s.NOMBRE.Contains(searchString));
+                    }
+
+                    //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
+                    if (DEP.Count() == 0)
+                    {
+                        TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
+                        return RedirectToAction("Index");
+                    }
                 }
 
-                else if (searchString.Equals("Todo"))
-                {
-                    DEP = DEP.Where(s => s.ESTADO.Contains("tiv"));
-                }
-
-                else if (searchString.Equals("Seleccione"))
-                {
-                    TempData["Error"] = "¡Debe seleccionar los departamentos que desea ver!";
-                    return RedirectToAction("Index");
-                }
-
-                //Muestra los departamentos que coincidan con el nombre que el usuario desea ver.
-                else
-                {
-                    DEP = DEP.Where(s => s.NOMBRE.Contains(searchString));
-                }
-
-                //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
-                if (DEP.Count() == 0)
-                {
-                    TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
-                    return RedirectToAction("Index");
-                }
+                return View(DEP);
             }
 
-            return View(DEP);
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: DEPARTAMENTOS/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_DEPART.Equals("Si"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                DEPARTAMENTOS dEPARTAMENTOS = db.DEPARTAMENTOS.Find(id);
+                if (dEPARTAMENTOS == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(dEPARTAMENTOS);
             }
-            DEPARTAMENTOS dEPARTAMENTOS = db.DEPARTAMENTOS.Find(id);
-            if (dEPARTAMENTOS == null)
-            {
-                return HttpNotFound();
-            }
-            return View(dEPARTAMENTOS);
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: DEPARTAMENTOS/Create
         public ActionResult Create()
         {
-            viewBagEmpresas();
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_DEPART.Equals("Si"))
+            {
+                viewBagEmpresas();
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: DEPARTAMENTOS/Create
@@ -115,17 +139,25 @@ namespace HRM_DEV.Controllers
         // GET: DEPARTAMENTOS/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_DEPART.Equals("Si"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                DEPARTAMENTOS dEPARTAMENTOS = db.DEPARTAMENTOS.Find(id);
+                if (dEPARTAMENTOS == null)
+                {
+                    return HttpNotFound();
+                }
+                viewBagEmpresas();
+                return View(dEPARTAMENTOS);
             }
-            DEPARTAMENTOS dEPARTAMENTOS = db.DEPARTAMENTOS.Find(id);
-            if (dEPARTAMENTOS == null)
-            {
-                return HttpNotFound();
-            }
-            viewBagEmpresas();
-            return View(dEPARTAMENTOS);
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: DEPARTAMENTOS/Edit/5

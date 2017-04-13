@@ -18,34 +18,58 @@ namespace HRM_DEV.Controllers
         // GET: VACACIONES
         public ActionResult Index()
         {
-            EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
-            TempData.Keep("Empleado");
-            var vACACIONES = db.VACACIONES.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
-            return View("Index", vACACIONES);
-            //return View(vACACIONES.ToList());
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
+                TempData.Keep("Empleado");
+                var vACACIONES = db.VACACIONES.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
+                return View("Index", vACACIONES);
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
+
         }
 
         // GET: VACACIONES/Create
         public ActionResult Create()
         {
-            TempData.Keep("Empleado");
-            ViewBagEmpleado();
-            ViewBag.AUTORIZACION = new SelectList(db.PUESTOS, "PTS_ID", "ID_PUESTO");
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                TempData.Keep("Empleado");
+                ViewBagEmpleado();
+                ViewBag.AUTORIZACION = new SelectList(db.PUESTOS, "PTS_ID", "ID_PUESTO");
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult ValidateIDEmp()
         {
-            if (TempData["Empleado"] == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
             {
-                TempData["Error"] = "¡Seleccione un empleado!";
-                return RedirectToAction("Expediente", "Expedientes");
+                if (TempData["Empleado"] == null)
+                {
+                    TempData["Error"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("Expediente", "Expedientes");
+                }
+                else
+                {
+                    //TempData["Success"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("Index", "Expedientes");
+                }
             }
-            else
-            {
-                //TempData["Success"] = "¡Seleccione un empleado!";
-                return RedirectToAction("Index", "Expedientes");
-            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -68,9 +92,17 @@ namespace HRM_DEV.Controllers
 
         public ActionResult CreateSusp()
         {
-            TempData.Keep("Empleado");
-            ViewBagEmpleado();
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                TempData.Keep("Empleado");
+                ViewBagEmpleado();
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -90,24 +122,41 @@ namespace HRM_DEV.Controllers
 
         public ActionResult IndexSusp()
         {
-            EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
-            TempData.Keep("Empleado");
-            var sUSPENSIONES = db.SUSPENSIONES.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
-            return View("IndexSusp", sUSPENSIONES);
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
+                TempData.Keep("Empleado");
+                var sUSPENSIONES = db.SUSPENSIONES.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
+                return View("IndexSusp", sUSPENSIONES);
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
+
         }
 
         public ActionResult ValidateIDEmpSup()
         {
-            if (TempData["Empleado"] == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
             {
-                TempData["Error"] = "¡Seleccione un empleado!";
-                return RedirectToAction("Expediente", "Expedientes");
+                if (TempData["Empleado"] == null)
+                {
+                    TempData["Error"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("Expediente", "Expedientes");
+                }
+                else
+                {
+                    //TempData["Success"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("IndexSusp", "Expedientes");
+                }
             }
-            else
-            {
-                //TempData["Success"] = "¡Seleccione un empleado!";
-                return RedirectToAction("IndexSusp", "Expedientes");
-            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         /**********************************************************   Permisos   ********************************************************************/
@@ -115,9 +164,17 @@ namespace HRM_DEV.Controllers
 
         public ActionResult CreatePerm()
         {
-            TempData.Keep("Empleado");
-            ViewBagEmpleado();
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                TempData.Keep("Empleado");
+                ViewBagEmpleado();
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -137,25 +194,41 @@ namespace HRM_DEV.Controllers
 
         public ActionResult IndexPerm()
         {
-            EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
-            TempData.Keep("Empleado");
-            var pERMISOS = db.PERMISOS.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
-            return View("IndexPerm", pERMISOS);
-            //return View(vACACIONES.ToList());
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
+                TempData.Keep("Empleado");
+                var pERMISOS = db.PERMISOS.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
+                return View("IndexPerm", pERMISOS);
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
+
         }
 
         public ActionResult ValidateIDEmpPerm()
         {
-            if (TempData["Empleado"] == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
             {
-                TempData["Error"] = "¡Seleccione un empleado!";
-                return RedirectToAction("Expediente", "Expedientes");
+                if (TempData["Empleado"] == null)
+                {
+                    TempData["Error"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("Expediente", "Expedientes");
+                }
+                else
+                {
+                    //TempData["Success"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("IndexPerm", "Expedientes");
+                }
             }
-            else
-            {
-                //TempData["Success"] = "¡Seleccione un empleado!";
-                return RedirectToAction("IndexPerm", "Expedientes");
-            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         /**********************************************************   Ascensos   ********************************************************************/
@@ -163,11 +236,19 @@ namespace HRM_DEV.Controllers
 
         public ActionResult CreateAsc()
         {
-            ViewBagEmpleado();
-            GetPuestoAnt();
-            TempData.Keep("Empleado");
-            ViewBag.PUESTO_NVO = new SelectList(db.PUESTOS, "PTS_ID", "NOMBRE");
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                ViewBagEmpleado();
+                GetPuestoAnt();
+                TempData.Keep("Empleado");
+                ViewBag.PUESTO_NVO = new SelectList(db.PUESTOS, "PTS_ID", "NOMBRE");
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -192,24 +273,40 @@ namespace HRM_DEV.Controllers
 
         public ActionResult IndexAsc()
         {
-            EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
-            TempData.Keep("Empleado");
-            var aSCENSOS = db.ASCENSOS.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
-            return View("IndexAsc", aSCENSOS);
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
+                TempData.Keep("Empleado");
+                var aSCENSOS = db.ASCENSOS.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
+                return View("IndexAsc", aSCENSOS);
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult ValidateIDEmpAsc()
         {
-            if (TempData["Empleado"] == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
             {
-                TempData["Error"] = "¡Seleccione un empleado!";
-                return RedirectToAction("Expediente", "Expedientes");
+                if (TempData["Empleado"] == null)
+                {
+                    TempData["Error"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("Expediente", "Expedientes");
+                }
+                else
+                {
+                    //TempData["Success"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("IndexAsc", "Expedientes");
+                }
             }
-            else
-            {
-                //TempData["Success"] = "¡Seleccione un empleado!";
-                return RedirectToAction("IndexAsc", "Expedientes");
-            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         public void GetPuestoAnt()
@@ -223,9 +320,17 @@ namespace HRM_DEV.Controllers
 
         public ActionResult CreateAmon()
         {
-            TempData.Keep("Empleado");
-            ViewBagEmpleado();
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                TempData.Keep("Empleado");
+                ViewBagEmpleado();
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -245,39 +350,63 @@ namespace HRM_DEV.Controllers
 
         public ActionResult IndexAmon()
         {
-            EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
-            TempData.Keep("Empleado");
-            var aMONESTACIONES = db.AMONESTACIONES.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
-            return View("IndexAmon", aMONESTACIONES);
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
+            {
+                EMPLEADOS Emp = (EMPLEADOS)TempData["Empleado"];
+                TempData.Keep("Empleado");
+                var aMONESTACIONES = db.AMONESTACIONES.Where(v => v.ID_EMPLEADO.Equals(Emp.EMP_ID));
+                return View("IndexAmon", aMONESTACIONES);
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult ValidateIDEmpAmon()
         {
-            if (TempData["Empleado"] == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
             {
-                TempData["Error"] = "¡Seleccione un empleado!";
-                return RedirectToAction("Expediente", "Expedientes");
+                if (TempData["Empleado"] == null)
+                {
+                    TempData["Error"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("Expediente", "Expedientes");
+                }
+                else
+                {
+                    //TempData["Success"] = "¡Seleccione un empleado!";
+                    return RedirectToAction("IndexAmon", "Expedientes");
+                }
             }
-            else
-            {
-                //TempData["Success"] = "¡Seleccione un empleado!";
-                return RedirectToAction("IndexAmon", "Expedientes");
-            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         /*******************************************************  Datos Personales  *****************************************************************/
         /*******************************************************************************************************************************************/
         public ActionResult Expediente(string searchString)
         {
-            var EMP = from d in db.EMPLEADOS
-                      select d;
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
             {
-                EMP = EMP.Where(s => s.CEDULA.Contains(searchString));
+                var EMP = from d in db.EMPLEADOS
+                          select d;
+
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    EMP = EMP.Where(s => s.CEDULA.Contains(searchString));
+                }
+
+                TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+                return RedirectToAction("Index", "Home");
             }
 
-            return View("Expediente", EMP);
+            return RedirectToAction("Login", "Login");
         }
 
         [HttpPost]

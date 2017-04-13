@@ -24,77 +24,85 @@ namespace HRM_DEV.Controllers
         [HttpPost]
         public ActionResult Generar(string datoEmpleado, string Estado, string desde, string hasta, string accion)
         {
-            var generarDesde = GenerarDesde(desde);
-            var generarHasta = GenerarHasta(hasta);
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
 
-            TempData["datoEmpleado"] = datoEmpleado;
-            TempData["estado"] = Estado;
-            TempData["desde"] = desde;
-            TempData["hasta"] = hasta;
-            TempData["accion"] = accion;
-
-            if (accion.Equals("Vacaciones"))
+            if (Session["usuarios"] != null && varUser.ACC_ACCIONES.Equals("Si"))
             {
-                var Vac = from e in db.VACACIONES
-                          select e;
+                var generarDesde = GenerarDesde(desde);
+                var generarHasta = GenerarHasta(hasta);
 
-                Vac = Vac.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
-                return View("ReporteVacaciones", Vac);
+                TempData["datoEmpleado"] = datoEmpleado;
+                TempData["estado"] = Estado;
+                TempData["desde"] = desde;
+                TempData["hasta"] = hasta;
+                TempData["accion"] = accion;
+
+                if (accion.Equals("Vacaciones"))
+                {
+                    var Vac = from e in db.VACACIONES
+                              select e;
+
+                    Vac = Vac.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
+                    return View("ReporteVacaciones", Vac);
+                }
+
+                else if (accion.Equals("Amonestaciones"))
+                {
+
+                    var Amon = from e in db.AMONESTACIONES
+                               select e;
+
+                    Amon = Amon.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
+                    return View("ReporteAmonestaciones", Amon);
+
+                }
+
+                else if (accion.Equals("Ascensos"))
+                {
+
+                    var Asc = from e in db.ASCENSOS
+                              select e;
+
+                    Asc = Asc.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
+                    return View("ReporteAscensos", Asc);
+
+                }
+
+                else if (accion.Equals("Permisos"))
+                {
+
+                    var Per = from e in db.PERMISOS
+                              select e;
+
+                    Per = Per.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
+                    return View("ReportePermisos", Per);
+
+                }
+                else if (accion.Equals("Suspensiones"))
+                {
+
+                    var Sus = from e in db.SUSPENSIONES
+                              select e;
+
+                    Sus = Sus.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
+                    return View("ReporteSuspensiones", Sus);
+
+                }
+
+                else
+                {
+
+                    var Emp = from e in db.EMPLEADOS
+                              select e;
+
+                    Emp = Emp.Where(s => (s.NOMBRE.Contains(datoEmpleado) || s.APE1.Contains(datoEmpleado) || s.APE2.Contains(datoEmpleado) || s.CEDULA.Contains(datoEmpleado)) && (s.ESTADO.Contains(Estado)) && (s.FECHA_CONTR >= generarDesde) && (s.FECHA_CONTR <= generarHasta));
+                    return View("ReporteEmpleados", Emp);
+
+                }
             }
 
-            else if (accion.Equals("Amonestaciones"))
-            {
-
-                var Amon = from e in db.AMONESTACIONES
-                           select e;
-
-                Amon = Amon.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
-                return View("ReporteAmonestaciones", Amon);
-
-            }
-
-            else if (accion.Equals("Ascensos"))
-            {
-
-                var Asc = from e in db.ASCENSOS
-                          select e;
-
-                Asc = Asc.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
-                return View("ReporteAscensos", Asc);
-
-            }
-
-            else if (accion.Equals("Permisos"))
-            {
-
-                var Per = from e in db.PERMISOS
-                          select e;
-
-                Per = Per.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
-                return View("ReportePermisos", Per);
-
-            }
-            else if (accion.Equals("Suspensiones"))
-            {
-
-                var Sus = from e in db.SUSPENSIONES
-                          select e;
-
-                Sus = Sus.Where(s => (s.EMPLEADOS.NOMBRE.Contains(datoEmpleado) || s.EMPLEADOS.APE1.Contains(datoEmpleado) || s.EMPLEADOS.APE2.Contains(datoEmpleado) || s.EMPLEADOS.CEDULA.Contains(datoEmpleado)) && (s.EMPLEADOS.ESTADO.Contains(Estado)) && (s.FECHA_CREACION >= generarDesde) && (s.FECHA_CREACION <= generarHasta));
-                return View("ReporteSuspensiones", Sus);
-
-            }
-
-            else
-            {
-
-                var Emp = from e in db.EMPLEADOS
-                          select e;
-
-                Emp = Emp.Where(s => (s.NOMBRE.Contains(datoEmpleado) || s.APE1.Contains(datoEmpleado) || s.APE2.Contains(datoEmpleado) || s.CEDULA.Contains(datoEmpleado)) && (s.ESTADO.Contains(Estado)) && (s.FECHA_CONTR >= generarDesde) && (s.FECHA_CONTR <= generarHasta));
-                return View("ReporteEmpleados", Emp);
-
-            }
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         public void ExportarExcel()

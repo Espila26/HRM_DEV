@@ -22,67 +22,91 @@ namespace HRM_DEV.Controllers
         */
         public ActionResult Index(string searchString)
         {
-            var PTO = from e in db.PUESTOS
-                      select e;
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
 
-            //validación para verificar la existencia del criterio de busqueda
-            if (!String.IsNullOrEmpty(searchString))
+            if (Session["usuarios"] != null && varUser.ACC_PUESTOS.Equals("Si"))
             {
-                //Muestra los puestos por el estado que el usuario definió previamente
-                if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                var PTO = from e in db.PUESTOS
+                          select e;
+
+                //validación para verificar la existencia del criterio de busqueda
+                if (!String.IsNullOrEmpty(searchString))
                 {
-                    PTO = PTO.Where(s => s.ESTADO.Equals(searchString));
+                    //Muestra los puestos por el estado que el usuario definió previamente
+                    if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                    {
+                        PTO = PTO.Where(s => s.ESTADO.Equals(searchString));
+                    }
+
+                    else if (searchString.Equals("Todo"))
+                    {
+                        PTO = PTO.Where(s => s.ESTADO.Contains("tiv"));
+                    }
+
+                    else if (searchString.Equals("Seleccione"))
+                    {
+                        TempData["Error"] = "¡Debe seleccionar los puestos que desea ver!";
+                        return RedirectToAction("Index");
+                    }
+
+                    //Muestra los puestos que coincidan con el nombre, apellidos o cedula que el usuario desea ver.
+                    else
+                    {
+                        PTO = PTO.Where(s => s.NOMBRE.Contains(searchString));
+                    }
+
+                    //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
+                    if (PTO.Count() == 0)
+                    {
+                        TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
+                        return RedirectToAction("Index");
+                    }
                 }
 
-                else if (searchString.Equals("Todo"))
-                {
-                    PTO = PTO.Where(s => s.ESTADO.Contains("tiv"));
-                }
-
-                else if (searchString.Equals("Seleccione"))
-                {
-                    TempData["Error"] = "¡Debe seleccionar los puestos que desea ver!";
-                    return RedirectToAction("Index");
-                }
-
-                //Muestra los puestos que coincidan con el nombre, apellidos o cedula que el usuario desea ver.
-                else
-                {
-                    PTO = PTO.Where(s => s.NOMBRE.Contains(searchString));
-                }
-
-                //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
-                if (PTO.Count() == 0)
-                {
-                    TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
-                    return RedirectToAction("Index");
-                }
+                return View(PTO);
             }
 
-            return View(PTO);
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: PUESTOS/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_PUESTOS.Equals("Si"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                PUESTOS pUESTOS = db.PUESTOS.Find(id);
+                if (pUESTOS == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(pUESTOS);
             }
-            PUESTOS pUESTOS = db.PUESTOS.Find(id);
-            if (pUESTOS == null)
-            {
-                return HttpNotFound();
-            }
-            return View(pUESTOS);
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home"); return RedirectToAction("Login", "Login");
         }
 
         // GET: PUESTOS/Create
         public ActionResult Create()
         {
-            ViewData["ID"] = CrearID();
-            viewBagDepartamentos();
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_PUESTOS.Equals("Si"))
+            {
+                ViewData["ID"] = CrearID();
+                viewBagDepartamentos();
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: PUESTOS/Create
@@ -179,17 +203,26 @@ namespace HRM_DEV.Controllers
         // GET: PUESTOS/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_PUESTOS.Equals("Si"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                PUESTOS pUESTOS = db.PUESTOS.Find(id);
+                if (pUESTOS == null)
+                {
+                    return HttpNotFound();
+                }
+                viewBagDepartamentos();
+                return View(pUESTOS);
             }
-            PUESTOS pUESTOS = db.PUESTOS.Find(id);
-            if (pUESTOS == null)
-            {
-                return HttpNotFound();
-            }
-            viewBagDepartamentos();
-            return View(pUESTOS);
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
+
         }
 
         // POST: PUESTOS/Edit/5

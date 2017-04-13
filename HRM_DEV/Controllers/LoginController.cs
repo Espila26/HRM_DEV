@@ -29,6 +29,7 @@ namespace HRM_DEV.Controllers
             {
                 if (usuarios.First().CONTRASEÑA.Equals(CONTRASEÑA))
                 {
+                    Session["usuarios"] = usuarios.First();
                     return RedirectToAction("Index", "Home");
                 }
             }

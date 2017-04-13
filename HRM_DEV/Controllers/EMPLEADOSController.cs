@@ -22,69 +22,93 @@ namespace HRM_DEV.Controllers
         */
         public ActionResult Index(string searchString)
         {
-            var EMP = from e in db.EMPLEADOS
-                      select e;
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
 
-            //validación para verificar la existencia del criterio de busqueda
-            if (!String.IsNullOrEmpty(searchString))
+            if (Session["usuarios"] != null && varUser.ACC_EMPLEADOS.Equals("Si"))
             {
-                //Muestra los empleados por el estado que el usuario definió previamente
-                if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                var EMP = from e in db.EMPLEADOS
+                          select e;
+
+                //validación para verificar la existencia del criterio de busqueda
+                if (!String.IsNullOrEmpty(searchString))
                 {
-                    EMP = EMP.Where(s => s.ESTADO.Equals(searchString));
+                    //Muestra los empleados por el estado que el usuario definió previamente
+                    if (searchString.Equals("Inactivo") || searchString.Equals("Activo"))
+                    {
+                        EMP = EMP.Where(s => s.ESTADO.Equals(searchString));
+                    }
+
+                    else if (searchString.Equals("Todo"))
+                    {
+                        EMP = EMP.Where(s => s.ESTADO.Contains("tiv"));
+                    }
+
+                    else if (searchString.Equals("Seleccione"))
+                    {
+                        TempData["Error"] = "¡Debe seleccionar los empleados que desea ver!";
+                        return RedirectToAction("Index");
+                    }
+
+                    //Muestra los empleados que coincidan con el nombre, apellidos o cedula que el usuario desea ver.
+                    else
+                    {
+                        EMP = EMP.Where(s => s.NOMBRE.Contains(searchString) || s.APE1.Contains(searchString) || s.APE2.Contains(searchString) || s.CEDULA.Contains(searchString));
+                    }
+
+                    //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
+                    if (EMP.Count() == 0)
+                    {
+                        TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
+                        return RedirectToAction("Index");
+
+                    }
+
                 }
 
-                else if (searchString.Equals("Todo"))
-                {
-                    EMP = EMP.Where(s => s.ESTADO.Contains("tiv"));
-                }
-
-                else if (searchString.Equals("Seleccione"))
-                {
-                    TempData["Error"] = "¡Debe seleccionar los empleados que desea ver!";
-                    return RedirectToAction("Index");
-                }
-
-                //Muestra los empleados que coincidan con el nombre, apellidos o cedula que el usuario desea ver.
-                else
-                {
-                    EMP = EMP.Where(s => s.NOMBRE.Contains(searchString) || s.APE1.Contains(searchString) || s.APE2.Contains(searchString) || s.CEDULA.Contains(searchString));
-                }
-
-                //si no existe registros que coicidan con el criterio de busqueda, se muestra el mensaje de error.
-                if (EMP.Count() == 0)
-                {
-                    TempData["Error"] = "¡No se encontraron registros coincidentes con el criterio de busqueda!";
-                    return RedirectToAction("Index");
-
-                }
-
+                return View(EMP);
             }
 
-            return View(EMP);
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: EMPLEADOS/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_EMPLEADOS.Equals("Si"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                EMPLEADOS eMPLEADOS = db.EMPLEADOS.Find(id);
+                if (eMPLEADOS == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(eMPLEADOS);
             }
-            EMPLEADOS eMPLEADOS = db.EMPLEADOS.Find(id);
-            if (eMPLEADOS == null)
-            {
-                return HttpNotFound();
-            }
-            return View(eMPLEADOS);
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: EMPLEADOS/Create
         public ActionResult Create()
         {
-            ViewData["ID"] = CrearID();
-            viewBagPuestos();
-            return View();
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_EMPLEADOS.Equals("Si"))
+            {
+                ViewData["ID"] = CrearID();
+                viewBagPuestos();
+                return View();
+            }
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: EMPLEADOS/Create
@@ -180,17 +204,25 @@ namespace HRM_DEV.Controllers
         // GET: EMPLEADOS/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            USUARIOS varUser = (USUARIOS)Session["usuarios"];
+
+            if (Session["usuarios"] != null && varUser.ACC_EMPLEADOS.Equals("Si"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                EMPLEADOS eMPLEADOS = db.EMPLEADOS.Find(id);
+                if (eMPLEADOS == null)
+                {
+                    return HttpNotFound();
+                }
+                viewBagPuestos();
+                return View(eMPLEADOS);
             }
-            EMPLEADOS eMPLEADOS = db.EMPLEADOS.Find(id);
-            if (eMPLEADOS == null)
-            {
-                return HttpNotFound();
-            }
-            viewBagPuestos();
-            return View(eMPLEADOS);
+
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: EMPLEADOS/Edit/5
