@@ -1,0 +1,69 @@
+﻿@model HRM_DEV.Models.USUARIOS
+@{
+    ViewBag.Title = "Iniciar sesión";
+    Layout = null;
+}
+
+@Styles.Render("~/Content/EstiloLogin.css")
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            @using (Html.BeginForm("Cuenta", "Login",new { @class = "form-horizontal"}))
+            {
+
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    <div class="login-page">
+                        <div class="form">
+                            <form class="login-form">
+                                <img src="~/Imagenes/conexus1.png">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.NOMBRE_USUARIO, new { @class = "input1", placeholder = "Nombre de usuario", @name = "nombreUsuario"})
+                                        @Html.ValidationMessageFor(m => m.NOMBRE_USUARIO, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        @Html.PasswordFor(m => m.CONTRASEÑA, new { @class = "input1", @placeholder = "Contraseña", @name = "contrasenna"})
+                                        @Html.ValidationMessageFor(m => m.CONTRASEÑA, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" value="Iniciar sesión" class="button1" />
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                        @* Habilite esta opción después de habilitar la confirmación de la cuenta para la función de restablecimiento de contraseña
+                            <p>
+                                @Html.ActionLink("¿Ha olvidado su contraseña?", "ForgotPassword")
+                            </p>*@
+
+            }
+        </section>
+    </div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+</body>
+</html>
