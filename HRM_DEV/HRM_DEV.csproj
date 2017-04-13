@@ -301,6 +301,8 @@
     <Content Include="Imagenes\home.png" />
     <Content Include="Imagenes\personal.png" />
     <Content Include="Imagenes\puestos.png" />
+    <Content Include="Imagenes\reportes.png" />
+    <Content Include="Imagenes\usuarios.png" />
     <Content Include="Models\Entities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Entities.edmx</DependentUpon>

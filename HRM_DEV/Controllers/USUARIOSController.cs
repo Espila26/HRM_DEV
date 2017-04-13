@@ -117,12 +117,23 @@ namespace HRM_DEV.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID_USUARIO,NOMBRE_USUARIO,CONTRASEÑA,ESTADO,ROLE,ACC_EMPRESA,ACC_DEPART,ACC_PUESTOS,ACC_EMPLEADOS,ACC_ACCIONES,ACC_USUARIO")] USUARIOS uSUARIOS)
+        public ActionResult Edit([Bind(Include = "ID_USUARIO,NOMBRE_USUARIO,CONTRASEÑA,ESTADO,ACC_EMPRESA,ACC_DEPART,ACC_PUESTOS,ACC_EMPLEADOS,ACC_ACCIONES,ACC_USUARIO,ROL")] USUARIOS uSUARIOS)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(uSUARIOS).State = EntityState.Modified;
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    TempData["Error"] = "Se debe de seleccionar un usuario";
+                    return RedirectToAction("Index");
+                }
                 db.SaveChanges();
+                TempData["Success"] = "¡La información del usuario ha sido editada exitosamente!";
                 return RedirectToAction("Index");
             }
             return View(uSUARIOS);
@@ -159,7 +170,7 @@ namespace HRM_DEV.Controllers
         {
             if (childChkbox == null)
             {
-                TempData["Error"] = "¡Se debe seleccionar al menos un empleado!";
+                TempData["Error"] = "¡Se debe seleccionar al menos un usuario!";
                 return RedirectToAction("Index");
             }
             else
@@ -172,7 +183,7 @@ namespace HRM_DEV.Controllers
                     }
                     else
                     {
-                        TempData["Error"] = "¡Solamente es posible ver los detalles de un empleado a la vez!";
+                        TempData["Error"] = "¡Solamente es posible ver los detalles de un usuario a la vez!";
                         return RedirectToAction("Index");
                     }
                 }
@@ -185,7 +196,7 @@ namespace HRM_DEV.Controllers
                     }
                     else
                     {
-                        TempData["Error"] = "¡Solamente es posible editar un empleado a la vez!";
+                        TempData["Error"] = "¡Solamente es posible editar un usuario a la vez!";
                         return RedirectToAction("Index");
                     }
                 }
@@ -193,11 +204,11 @@ namespace HRM_DEV.Controllers
                 {
                     foreach (var i in childChkbox)
                     {
-                        var emp = db.EMPLEADOS.Find(Int32.Parse(i));
-                        emp.ESTADO = "Inactivo";
+                        var usr = db.USUARIOS.Find(Int32.Parse(i));
+                        usr.ESTADO = "Inactivo";
                         db.SaveChanges();
                     }
-                    TempData["Success"] = "¡Se ha cambiado el estado de el o los Empleados seleccionados exitosamente!";
+                    TempData["Success"] = "¡Se ha cambiado el estado de el o los Usuarios seleccionados exitosamente!";
                     return RedirectToAction("Index");
                 }
 
@@ -205,11 +216,11 @@ namespace HRM_DEV.Controllers
                 {
                     foreach (var i in childChkbox)
                     {
-                        var emp = db.EMPLEADOS.Find(Int32.Parse(i));
-                        emp.ESTADO = "Activo";
+                        var usr = db.USUARIOS.Find(Int32.Parse(i));
+                        usr.ESTADO = "Activo";
                         db.SaveChanges();
                     }
-                    TempData["Success"] = "¡Se ha cambiado el estado de el o los Empleados seleccionados exitosamente!";
+                    TempData["Success"] = "¡Se ha cambiado el estado de el o los Usuarios seleccionados exitosamente!";
                     return RedirectToAction("Index");
                 }
                 return View();
