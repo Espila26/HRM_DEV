@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    var user = (HRM_DEV.Models.USUARIOS)Session["usuarios"];
+}
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -16,8 +21,16 @@
         <header>
             <span class="Home"></span>
             <h1>@Html.ActionLink("HR-Manager", "Index", "Home", null, new { @class = "h1Letra" })</h1>
-            <h2>Bienvenido(a): Usuario</h2>
-            <a class='boton' href='@Url.Action("Index","Home")'></a>
+            <h2>Bienvenido(a): @user.NOMBRE_USUARIO</h2>
+            <a class='boton' id="BotonConexus" onclick="return MostrarCuadroLogin()"></a>
+            <div id="triangulo"></div>
+            <div id="rectangulo">
+                <img id="conexus" />
+                <a id="usuario" href="/Usuarios/Details/@user.ID_USUARIO">@user.NOMBRE_USUARIO</a>
+            </div>
+            <div id="rectanguloBotones">
+                <input id="cerrarSession" type="button" value="Cerrar Session" onclick="location.href='@Url.Action("CerrarSession", "Login")'" class="buttonLogin" />
+            </div>
         </header>
         <aside>
             <table>
@@ -108,6 +121,30 @@
             });
             return false;
         }
+    </script>
+
+    <script>
+        function MostrarCuadroLogin() {
+
+            $('#triangulo').css('display', 'initial');
+            $('#rectangulo').css('display', 'initial');
+            $('#rectanguloBotones').css('display', 'initial');
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(document).click(function (e) {
+                if (e.target.id != 'BotonConexus' && e.target.id != 'cerrarSession') {
+                    $('#triangulo').hide();
+                    $('#rectangulo').hide();
+                    $('#rectanguloBotones').hide();
+                }
+            });
+
+        });
+
     </script>
 </body>
 </html>

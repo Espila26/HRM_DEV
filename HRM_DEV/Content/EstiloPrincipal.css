@@ -78,7 +78,7 @@ h2{
     font-size: 95%;
     position: absolute;
     top: 4%; 
-    left: 75%;
+    left: 70%;
     font: 150% sans-serif;
     width: 25%;
 }
@@ -200,4 +200,82 @@ img {
     position:absolute;
     top:49.5%;
     left:8%;
+}
+
+#triangulo{
+     width: 0;
+     height: 0;
+     border-right: 15px solid transparent;
+     border-top: 15px solid transparent;
+     border-left: 15px solid transparent;
+     border-bottom: 15px solid white;
+     position: absolute;
+     top: 60%;
+     left: 95.3%;
+     display: none;
+}
+
+#rectangulo {
+     width: 22%; 
+     height: 200%; 
+     border: 3px solid white;
+     background: white;
+     position: absolute;
+     top: 97%;
+     left: 75.7%;
+     border-collapse: collapse;
+     box-shadow: 2px 2px 5px #999;
+     display: none;
+     z-index: 1;
+}
+
+#rectanguloBotones {
+     width: 22%; 
+     height: 80%; 
+     border: 3px solid #cf3b3b;
+     background: #cf3b3b;
+     position: absolute;
+     top: 290%;
+     left: 75.7%;
+     border-collapse: collapse;
+     box-shadow: 2px 2px 5px #999;
+     display: none;
+     z-index: 1;
+}
+
+.buttonLogin {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #cf3b3b;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  height: 100%;
+  border-collapse: collapse;
+}
+.buttonLogin:hover,.button1:active,.button1:focus {
+  background: #dd2c2c;
+}
+#conexus{
+   background-image: url("/Imagenes/conexus1.png");
+   background-size: 100%; 
+   width: 35%;
+   height: 80%;
+   position: absolute;
+   top: 25%; 
+   left: 5%;
+}
+
+#usuario{
+    font-family: "Roboto", sans-serif;
+    font-size: 23px;
+    position: absolute;
+    top: 50%; 
+    left: 48%;
 }

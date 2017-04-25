@@ -20,20 +20,30 @@ namespace HRM_DEV.Controllers
 
         public ActionResult Cuenta(string NOMBRE_USUARIO, string CONTRASEÑA)
         {
-            var usuarios = from e in db.USUARIOS
+
+            if (!String.IsNullOrEmpty(NOMBRE_USUARIO) && !String.IsNullOrEmpty(CONTRASEÑA))
+            {
+
+                var usuarios = from e in db.USUARIOS
                                select e;
 
-            usuarios = usuarios.Where(s => (s.NOMBRE_USUARIO.Equals(NOMBRE_USUARIO)));
+                usuarios = usuarios.Where(s => (s.NOMBRE_USUARIO.Equals(NOMBRE_USUARIO)));
 
-            if (usuarios != null)
-            {
-                if (usuarios.First().CONTRASEÑA.Equals(CONTRASEÑA))
+                if (usuarios != null)
                 {
-                    Session["usuarios"] = usuarios.First();
-                    return RedirectToAction("Index", "Home");
+                    if (usuarios.First().CONTRASEÑA.Equals(CONTRASEÑA))
+                    {
+                        Session["usuarios"] = usuarios.First();
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
             }
+            return RedirectToAction("Login", "Login");
+        }
 
+        public ActionResult CerrarSession()
+        {
+            Session.RemoveAll();
             return RedirectToAction("Login", "Login");
         }
     }
