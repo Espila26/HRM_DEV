@@ -216,6 +216,7 @@
     <Compile Include="Controllers\PUESTOSController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\USUARIOSController.cs" />
+    <Compile Include="Correo.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -290,11 +291,13 @@
     <Content Include="Content\EstiloPrincipal.css" />
     <Content Include="Content\EstiloReporte.css" />
     <Content Include="Content\EstiloTabla.css" />
+    <Content Include="Content\main.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Imagenes\acciones.png" />
+    <Content Include="Imagenes\aniversario2.jpg" />
     <Content Include="Imagenes\conexus.png" />
     <Content Include="Imagenes\conexus1.png" />
     <Content Include="Imagenes\conexus3.png" />
@@ -303,6 +306,7 @@
     <Content Include="Imagenes\flecha.png" />
     <Content Include="Imagenes\home.png" />
     <Content Include="Imagenes\personal.png" />
+    <Content Include="Imagenes\plantilla.jpg" />
     <Content Include="Imagenes\puestos.png" />
     <Content Include="Imagenes\reportes.png" />
     <Content Include="Imagenes\usuarios.png" />
@@ -332,6 +336,7 @@
       <DependentUpon>Entities.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\Calendario1.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -416,6 +421,7 @@
     <Content Include="Views\USUARIOS\Edit.cshtml" />
     <Content Include="Views\USUARIOS\Index.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\EMPRESAS\IndexPrueba.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
