@@ -39,7 +39,7 @@
                   
                         @foreach (var item in Model)
                         {
-                            if (item.FECHA_NAC.CompareTo(@DateTime.Today) == 0)
+                            if ((item.FECHA_NAC.Day.CompareTo(DateTime.Today.Day) == 0 && item.FECHA_NAC.Month.CompareTo(DateTime.Today.Month) == 0))
                             {
                                 <li class="plan-price">
                                     <strong>@Html.DisplayFor(modelItem => item.NOMBRE) @Html.DisplayFor(modelItem => item.APE1) @Html.DisplayFor(modelItem => item.APE2)</strong>
@@ -61,7 +61,7 @@
 
                     @foreach (var item in Model)
                     {
-                        if (item.FECHA_CONTR.CompareTo(@DateTime.Today) == 0)
+                        if ((item.FECHA_CONTR.Day.CompareTo(DateTime.Today.Day) == 0 && item.FECHA_CONTR.Month.CompareTo(DateTime.Today.Month) == 0))
                         {
                             <li class="plan-price">
                                 <strong>@Html.DisplayFor(modelItem => item.NOMBRE) @Html.DisplayFor(modelItem => item.APE1) @Html.DisplayFor(modelItem => item.APE2)</strong>

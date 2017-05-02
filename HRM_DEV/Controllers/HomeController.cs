@@ -19,7 +19,8 @@ namespace HRM_DEV.Controllers
             var EMP = from e in db.EMPLEADOS
                       select e;
 
-            EMP = EMP.Where(s => s.FECHA_NAC.CompareTo(System.DateTime.Today) == 0 || s.FECHA_CONTR.CompareTo(System.DateTime.Today) == 0);//Empleados que cumplen anos el dia actual
+            EMP = EMP.Where(s => (s.FECHA_NAC.Day.CompareTo(DateTime.Today.Day) == 0 && s.FECHA_NAC.Month.CompareTo(DateTime.Today.Month) == 0) 
+                            || (s.FECHA_CONTR.Day.CompareTo(DateTime.Today.Day) == 0 && s.FECHA_CONTR.Month.CompareTo(DateTime.Today.Month) == 0));//Empleados que cumplen anos el dia actual
 
             Session["cumpleaneros"] = EMP;
 
@@ -34,7 +35,7 @@ namespace HRM_DEV.Controllers
 
             foreach (var e in ListaEmpleados)
             {
-                if (e.FECHA_NAC.CompareTo(@DateTime.Today) == 0)
+                if (e.FECHA_NAC.Day.CompareTo(DateTime.Today.Day) == 0 && e.FECHA_NAC.Month.CompareTo(DateTime.Today.Month) == 0)
                     correo.enviarCorreo("Cumpleaños", "Prueba de Correo HR-Manager", e.E_MAIL);
             }
             return RedirectToAction("Index");
@@ -46,7 +47,7 @@ namespace HRM_DEV.Controllers
             var ListaEmpleados = (IQueryable<EMPLEADOS>)Session["cumpleaneros"];
             foreach (var e in ListaEmpleados)
             {
-                if (e.FECHA_CONTR.CompareTo(@DateTime.Today) == 0)
+                if ((e.FECHA_CONTR.Day.CompareTo(DateTime.Today.Day) == 0 && e.FECHA_CONTR.Month.CompareTo(DateTime.Today.Month) == 0))
                     correo.enviarCorreo("Felicitaciones", "Prueba de Correo HR-Manager", e.E_MAIL);
             }
             return RedirectToAction("Index");
