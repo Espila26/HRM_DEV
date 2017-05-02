@@ -1,3 +1,89 @@
-﻿@{
+﻿@model IEnumerable<HRM_DEV.Models.EMPLEADOS>
+
+@{
     ViewBag.Title = "Home Page";
 }
+
+@Styles.Render("~/Content/bootstrap.min.css")
+@Styles.Render("~/Content/main.css")
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Pricing Table</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+      <![endif]-->
+</head>
+<body>
+    
+    <div class="container">
+        <h1 class="page-header">Pricing Table</h1>
+        <p>&nbsp;</p>
+        <div class="row flat">
+            <div class="col-lg-3 col-md-3 col-xs-6">
+                <ul class="plan plan2 featured">
+                    <li class="plan-name">
+                        Cumpleañeros de Hoy
+                    </li>
+                  
+                        @foreach (var item in Model)
+                        {
+                            if ((item.FECHA_NAC.Day.CompareTo(DateTime.Today.Day) == 0 && item.FECHA_NAC.Month.CompareTo(DateTime.Today.Month) == 0))
+                            {
+                                <li class="plan-price">
+                                    <strong>@Html.DisplayFor(modelItem => item.NOMBRE) @Html.DisplayFor(modelItem => item.APE1) @Html.DisplayFor(modelItem => item.APE2)</strong>
+                                </li>
+                            }
+                        }
+
+                    <li class="plan-action">
+                        <a class="btn btn-success btn-lg" onclick="location.href='@Url.Action("EnviarCorreos", "Home")'">Felicitar</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-6">
+                <ul class="plan plan2 featured">
+                    <li class="plan-name">
+                        Años con la empresa
+                    </li>
+
+                    @foreach (var item in Model)
+                    {
+                        if ((item.FECHA_CONTR.Day.CompareTo(DateTime.Today.Day) == 0 && item.FECHA_CONTR.Month.CompareTo(DateTime.Today.Month) == 0))
+                        {
+                            <li class="plan-price">
+                                <strong>@Html.DisplayFor(modelItem => item.NOMBRE) @Html.DisplayFor(modelItem => item.APE1) @Html.DisplayFor(modelItem => item.APE2)</strong>
+                            </li>
+                        }
+                    }
+
+                    <li class="plan-action">
+                        <a class="btn btn-success btn-lg" onclick="location.href='@Url.Action("EnviarCorreos2", "Home")'">Felicitar</a>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+    </div> <!-- /container -->
+
+</body>
+</html>
+
+@section Scripts
+{
+    <script src="@Url.Content("~/Scripts/Calendario1.js")"></script>
+}
+
+
