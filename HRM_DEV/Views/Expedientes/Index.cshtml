@@ -33,12 +33,10 @@
             <li><a href="@Url.Action("ValidateIDEmpAsc", "Expedientes")"><div>Ascensos.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmpPerm", "Expedientes")"><div>Permisos.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmpSup", "Expedientes")"><div>Suspensiones.</div></a></li>
-            <li class="active"><a id="linkVacaciones"><div>Vacaciones.</div></a></li>
+            <li><a href="@Url.Action("ValidateIDEmp", "Expedientes")"><div>Vacaciones.</div></a></li>
         </ul>
 
-        <div id="TitleDetails">
-            <p>Vacaciones Solicitadas</p>
-        </div>
+        <h4><div id="lettertext">Vacaciones Solicitadas</div></h4>
         
         <style type="text/css">
             .webGrid {
@@ -98,7 +96,7 @@
             .contenedorGrid {
                 width: 100%;
                 position: absolute;
-                top: 37%;
+                top: 44%;
             }
 
             #pager a {
@@ -126,7 +124,7 @@
                 }
         </style>
         <div class="contenedorGrid">
-            @using (Html.BeginForm("formAction", "Expedientes"))
+            @using (Html.BeginForm("Comprobante", "Expedientes"))
             {
                 var grid = new WebGrid(source: Model,
                 rowsPerPage: 6, ajaxUpdateCallback: "addCheck");
@@ -138,6 +136,11 @@
                  rowStyle: "webgridRow",
                  alternatingRowStyle: "alt",
                  columns: grid.Columns(
+                 grid.Column(
+                    format: @<text>
+                        <input type="checkbox" value="@item.ID_SOLICITUD" name="childChkbox" />
+                    </text>,
+                 header: ""),
                  grid.Column("ID_SOLICITUD", "Número de Solicitud: ", canSort: false),
                  grid.Column("ID_EMPLEADO", "Número de Empleado: ", canSort: false),
                  grid.Column("INICIO", "Fecha de Inicio: ", canSort: false),
@@ -151,7 +154,8 @@
                 <br />
                 <div>
                     <input type="button" value="Solicitar" onclick="location.href='@Url.Action("Create", "Expedientes")'" class="myButton" />
-                </div>
+                    <input type="submit" value="Exportar" class="myButton" name="ComprobanteVacaciones"/>
+                 </div>
             }
         </div>
 

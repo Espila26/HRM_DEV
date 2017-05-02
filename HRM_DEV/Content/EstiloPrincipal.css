@@ -200,6 +200,7 @@ img {
     position:absolute;
     top:49.5%;
     left:8%;
+    background-repeat : no-repeat; 
 }
 
 #triangulo{
@@ -264,12 +265,14 @@ img {
 }
 #conexus{
    background-image: url("/Imagenes/conexus1.png");
+   border: white;
    background-size: 100%; 
    width: 35%;
    height: 80%;
    position: absolute;
    top: 25%; 
    left: 5%;
+   z-index: 1;
 }
 
 #usuario{
@@ -278,4 +281,12 @@ img {
     position: absolute;
     top: 50%; 
     left: 48%;
+}
+
+#datepicker{
+    height:40%;
+    width: 40%;
+    position: absolute;
+    top: 30%;
+    left: 100%;
 }

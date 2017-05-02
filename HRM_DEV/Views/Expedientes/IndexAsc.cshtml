@@ -31,15 +31,13 @@
         <ul class="tab-links">
             <li><a href="@Url.Action("Expediente", "Expedientes")"><div>Datos Personales.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmpAmon", "Expedientes")"><div>Amonestaciones.</div></a></li>
-            <li><a href="linkAscensos"><div>Ascensos.</div></a></li>
+            <li><a href="@Url.Action("ValidateIDEmpAsc", "Expedientes")"><div>Ascensos.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmpPerm", "Expedientes")"><div>Permisos.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmpSup", "Expedientes")"><div>Suspensiones.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmp", "Expedientes")"><div>Vacaciones.</div></a></li>
         </ul>
 
-        <div id="TitleDetails">
-            <p>Permisos Solicitados</p>
-        </div>
+        <h4><div id="lettertext">Ascensos Realizadas</div></h4>
 
         <style type="text/css">
             .webGrid {
@@ -99,7 +97,7 @@
             .contenedorGrid {
                 width: 100%;
                 position: absolute;
-                top: 37%;
+                top: 44%;
             }
 
             #pager a {
@@ -127,7 +125,7 @@
                 }
         </style>
         <div class="contenedorGrid">
-            @using (Html.BeginForm("formAction", "Expedientes"))
+            @using (Html.BeginForm("Comprobante", "Expedientes"))
             {
                 var grid = new WebGrid(source: Model,
                 rowsPerPage: 6, ajaxUpdateCallback: "addCheck");
@@ -146,10 +144,10 @@
                  header: ""),
                  grid.Column("ID_ASCENSO", "Número de Solicitud", canSort: false),
                  grid.Column("ID_EMPLEADO", "Empleado", canSort: false),
-                 grid.Column("Descripcion", "Motivo", canSort: false),
-                 grid.Column("PUESTO_ANT", "Fecha de Ingreso", canSort: false),
-                 grid.Column("PUESTO_NVO", "Tipo de Permiso", canSort: false),
-                 grid.Column("FECHA", "Cantidad de Horas", canSort: false),
+                 grid.Column("Descripcion", "Descripcion", canSort: false),
+                 grid.Column("PUESTO_ANT", "Puesto Anterior", canSort: false),
+                 grid.Column("PUESTO_NVO", "Puesto Nuevo", canSort: false),
+                 grid.Column("FECHA", "Fecha de inicio", canSort: false),
                  grid.Column("AUTORIZACION", "Autorización", canSort: false)
                     ))
                 <div id="pager">
@@ -158,6 +156,7 @@
                 <br />
                 <div>
                     <input type="button" value="Solicitar" onclick="location.href='@Url.Action("CreateAsc", "Expedientes")'" class="myButton" />
+                    <input type="submit" value="Exportar" class="myButton" name="ComprobanteAscensos" />
                 </div>
             }
         </div>

@@ -32,14 +32,12 @@
             <li><a href="@Url.Action("Expediente", "Expedientes")"><div>Datos Personales.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmpAmon", "Expedientes")"><div>Amonestaciones.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmpAsc", "Expedientes")"><div>Ascensos.</div></a></li>
-            <li><a href="linkPermiso"><div>Permisos.</div></a></li>
+            <li><a href="@Url.Action("ValidateIDEmpPerm", "Expedientes")"><div>Permisos.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmpSup", "Expedientes")"><div>Suspensiones.</div></a></li>
             <li><a href="@Url.Action("ValidateIDEmp", "Expedientes")"><div>Vacaciones.</div></a></li>
         </ul>
 
-        <div id="TitleDetails">
-            <p>Permisos Solicitados</p>
-        </div>
+        <h4><div id="lettertext">Permisos Solicitados</div></h4>
 
         <style type="text/css">
             .webGrid {
@@ -99,7 +97,7 @@
             .contenedorGrid {
                 width: 100%;
                 position: absolute;
-                top: 37%;
+                top: 44%;
             }
 
             #pager a {
@@ -127,7 +125,7 @@
                 }
         </style>
         <div class="contenedorGrid">
-            @using (Html.BeginForm("formAction", "Expedientes"))
+            @using (Html.BeginForm("Comprobante", "Expedientes"))
             {
                 var grid = new WebGrid(source: Model,
                 rowsPerPage: 6, ajaxUpdateCallback: "addCheck");
@@ -159,6 +157,7 @@
                 <br />
                 <div>
                     <input type="button" value="Solicitar" onclick="location.href='@Url.Action("CreatePerm", "Expedientes")'" class="myButton" />
+                    <input type="submit" value="Exportar" class="myButton" name="ComprobantePermisos" />
                 </div>
             }
         </div>

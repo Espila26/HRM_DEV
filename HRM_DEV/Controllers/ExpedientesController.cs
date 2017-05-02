@@ -7,6 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using HRM_DEV.Models;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace HRM_DEV.Controllers
 {
@@ -77,9 +80,14 @@ namespace HRM_DEV.Controllers
         {
             if (ModelState.IsValid)
             {
-                vACACIONES.FECHA_CREACION = System.DateTime.Now;
+                var empleado = db.EMPLEADOS.Find(vACACIONES.ID_EMPLEADO);
+                TimeSpan ts = vACACIONES.FINAL - vACACIONES.INICIO;
+                vACACIONES.CANT_DIAS = ts.Days;
+                empleado.DIAS_VAC_UTILIZAD = empleado.DIAS_VAC_UTILIZAD + vACACIONES.CANT_DIAS;
+                vACACIONES.FECHA_CREACION = DateTime.Now;
                 db.VACACIONES.Add(vACACIONES);
                 db.SaveChanges();
+                ViewBagEmpleado();
                 return RedirectToAction("Create");
             }
             ViewBagEmpleado();
@@ -112,6 +120,7 @@ namespace HRM_DEV.Controllers
             {
                 sUSPENSIONES.FECHA_CREACION = System.DateTime.Now;
                 db.SUSPENSIONES.Add(sUSPENSIONES);
+
                 db.SaveChanges();
                 return RedirectToAction("CreateSusp");
             }
@@ -400,13 +409,14 @@ namespace HRM_DEV.Controllers
                 if (!String.IsNullOrEmpty(searchString))
                 {
                     EMP = EMP.Where(s => s.CEDULA.Contains(searchString));
-                }
 
-                TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
-                return RedirectToAction("Index", "Home");
+                }
+                return View("Expediente", EMP);
+
             }
 
-            return RedirectToAction("Login", "Login");
+            TempData["Error"] = "¡No tiene acceso al modulo selccionado!";
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -436,7 +446,10 @@ namespace HRM_DEV.Controllers
             List<EMPLEADOS> Empleado = new List<EMPLEADOS>();
             if (TempData["Empleado"] != null)
             {
-                Empleado.Add((EMPLEADOS)TempData["Empleado"]);
+                var tempEmpleado = (EMPLEADOS)TempData["Empleado"];
+                var empleado = db.EMPLEADOS.Find(tempEmpleado.EMP_ID);
+                Empleado.Add(empleado);
+                TempData["Empleado"] = empleado;
                 CalcularDiasDisponibles(Empleado.First());
                 ViewBag.ID_EMPLEADO = new SelectList(Empleado, "EMP_ID", "NOMBRE");
             }
@@ -457,6 +470,146 @@ namespace HRM_DEV.Controllers
             }
             int diasDisponibles = (annos * 12) + meses - empleado.DIAS_VAC_UTILIZAD - resMesIncomp;
             ViewBag.DiasDisponibles = diasDisponibles;
+        }
+
+        public FileStreamResult ExportarPDF(string exportData)
+        {
+            var bytes = System.Text.Encoding.UTF8.GetBytes(exportData);
+
+            using (var input = new MemoryStream(bytes))
+            {
+                var output = new MemoryStream();
+                var document = new Document(PageSize.A4, 50, 50, 50, 50);
+                var writer = PdfWriter.GetInstance(document, output);
+                Image addLogo = default(Image);
+                addLogo = Image.GetInstance(Server.MapPath("~/Imagenes/conexus1.png"));               
+                writer.CloseStream = false;
+                document.Open();
+                addLogo.ScaleToFit(100, 100);
+                addLogo.Alignment = Image.ALIGN_RIGHT;
+                document.Add(addLogo);
+                var xmlWorker = iTextSharp.tool.xml.XMLWorkerHelper.GetInstance();
+                xmlWorker.ParseXHtml(writer, document, input, System.Text.Encoding.UTF8);
+                document.Close();
+                output.Position = 0;
+                return new FileStreamResult(output, "application/pdf");
+            }
+        }
+
+        public ActionResult Comprobante(string[] childChkbox)
+        {
+            if (ValidaCheckBox(childChkbox))
+            {
+                string exportData = "";
+                int id = Int32.Parse(childChkbox.First());
+
+                if (Request.Form["ComprobanteVacaciones"] != null)
+                {
+                    var Vacaciones = db.VACACIONES.Find(id);
+
+                    ViewBagEmpleado();
+                    TempData.Keep("Empleado");
+
+                    exportData = String.Format("<html><head>Comprobante de Vacaciones</head><body><h1>" +
+                                          " Comprobante de Vacaciones</h1><label> Dias Disponibles:" +
+                                          "</label>  <p>" + ViewBag.DiasDisponibles + "</p><label>" +
+                                          "Empleado: </label><p>" + Vacaciones.EMPLEADOS.NOMBRE
+                                          + " " + Vacaciones.EMPLEADOS.APE1 + " " +
+                                          Vacaciones.EMPLEADOS.APE2 + " </p><label>Inicio: "
+                                          + "</label>" + "<p>" + Vacaciones.INICIO + "</p> " +
+                                          " <label>Fin: </label>" + "<p>" + Vacaciones.FINAL +
+                                          "</p><label>Cantidad de dias: </label> <p>" + Vacaciones.CANT_DIAS +
+                                          "</p><label>Autorizacion: </label><p>" + Vacaciones.AUTORIZACION +
+                                          "</p></body></html>", "<style>h1{position:absolute; top:5%;}</style>");
+                }
+                else if (Request.Form["ComprobanteAmonestaciones"] != null)
+                {
+                    var amonestaciones = db.AMONESTACIONES.Find(id);
+
+                    exportData = String.Format("<html><head>Comprobante de Amonestaciones</head><body><h1>" +
+                                          " Comprobante de Amonestaciones</h1><label>" +
+                                          "Empleado: </label><p>" + amonestaciones.EMPLEADOS.NOMBRE
+                                          + " " + amonestaciones.EMPLEADOS.APE1 + " " +
+                                          amonestaciones.EMPLEADOS.APE2 + " </p><label>Fecha de Inicio: "
+                                          + "</label>" + "<p>" + amonestaciones.FECHA_INICIO + "</p> " +
+                                          " <label>Fecha de Ingreso: </label>" + "<p>" + amonestaciones.FECHA_FINAL +
+                                          "</p><label>Motivo: </label> <p>" + amonestaciones.GOCE_SALARIO +
+                                          "</p><label>Tipo de Amonestacion: </label><p>" + amonestaciones.VERB_ESC +
+                                          "</p><label>Autorización: </label><p>" + amonestaciones.AUTORIZACION +
+                                          "</p></body></html>", "<style></style>");
+                }
+                else if (Request.Form["ComprobanteAscensos"] != null)
+                {
+                    var ascensos = db.ASCENSOS.Find(id);
+
+                    exportData = String.Format("<html><head>Comprobante de Ascensos</head><body><h1>" +
+                                          " Comprobante de Ascensos</h1><label>" +
+                                          "Empleado: </label><p>" + ascensos.EMPLEADOS.NOMBRE
+                                          + " " + ascensos.EMPLEADOS.APE1 + " " +
+                                          ascensos.EMPLEADOS.APE2 + " </p><label>Descripcion: "
+                                          + "</label>" + "<p>" + ascensos.DESCRIPCION + "</p> " +
+                                          " <label>Puesto Anterior: </label>" + "<p>" + ascensos.PUESTO_ANT +
+                                          "</p><label>Puesto Nuevo: </label> <p>" + ascensos.PUESTOS.NOMBRE +
+                                          "</p><label>Fecha de inicio: </label><p>" + ascensos.FECHA +
+                                          "</p><label>Autorización: </label><p>" + ascensos.AUTORIZACION +
+                                          "</p></body></html>", "<style></style>");
+                }
+                else if (Request.Form["ComprobantePermisos"] != null)
+                {
+                    var permisos = db.PERMISOS.Find(id);
+
+                    exportData = String.Format("<html><head>Comprobante de Permisos</head><body><h1>" +
+                                          " Comprobante de Permisos</h1><label>" +
+                                          "Empleado: </label><p>" + permisos.EMPLEADOS.NOMBRE
+                                          + " " + permisos.EMPLEADOS.APE1 + " " +
+                                          permisos.EMPLEADOS.APE2 + " </p><label>Fecha de Inicio: "
+                                          + "</label>" + "<p>" + permisos.INICIO + "</p> " +
+                                          " <label>Fecha de Ingreso: </label>" + "<p>" + permisos.FINAL +
+                                          "</p><label>Tipo de Permiso: </label> <p>" + permisos.GOCE_SALARIO +
+                                          "</p><label>Duración: </label><p>" + permisos.CANT_DIAS + " días " +
+                                          + permisos.CANT_HORAS + " horas</p><label>Autorización: </label><p>" + 
+                                          permisos.AUTORIZACION + "</p></body></html>", "<style></style>");
+                }
+                else if (Request.Form["ComprobanteSuspenciones"] != null)
+                {
+                    var suspenciones = db.SUSPENSIONES.Find(id);
+
+                    exportData = String.Format("<html><head>Comprobante de Suspenciones</head><body><h1>" +
+                                          " Comprobante de Suspenciones</h1><label>" +
+                                          "Empleado: </label><p>" + suspenciones.EMPLEADOS.NOMBRE
+                                          + " " + suspenciones.EMPLEADOS.APE1 + " " +
+                                          suspenciones.EMPLEADOS.APE2 + " </p><label>Fecha de Inicio: "
+                                          + "</label>" + "<p>" + suspenciones.INICIO + "</p> " +
+                                          " <label>Fecha de Ingreso: </label>" + "<p>" + suspenciones.FINAL +
+                                          "</p><label>Tipo de Suspencion: </label> <p>" + suspenciones.GOCE_SALARIO +
+                                          "</p><label>Motivo: </label><p>" + suspenciones.DESCRIPCION +
+                                          "</p><label>Autorización: </label><p>" + suspenciones.AUTORIZACION + 
+                                          "</p></body></html>", "<style></style>");
+                }
+                return ExportarPDF(exportData);
+            }
+            return RedirectToAction("Index");
+        }
+
+
+        public bool ValidaCheckBox(string[] childChkbox)
+        {
+            if (childChkbox == null)
+            {
+                TempData["Error"] = "¡Se debe seleccionar al menos un departamento!";
+            }
+            else
+            {
+                if (childChkbox.Count() == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    TempData["Error"] = "¡Solamente es posible ver detalles de un departamento a la vez!";
+                }
+            }
+            return false;
         }
     }
 }
