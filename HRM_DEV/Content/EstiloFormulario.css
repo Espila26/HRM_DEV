@@ -71,8 +71,8 @@
     font-family:sans-serif;
     font-weight:bold;
     font-size: 25px;
-    position: fixed;
-    left: 50%;
+    position: absolute;
+    left: 35%;
 }
 /*Estilo de los combobox*/
 .combobox {

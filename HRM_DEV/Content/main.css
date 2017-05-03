@@ -55,3 +55,7 @@ body {
   margin-top: 100px;
   padding-bottom: 30px;
 }
+#añosEmpresa{
+    position: absolute;
+    left: 50%;
+}
