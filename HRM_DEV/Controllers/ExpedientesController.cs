@@ -511,80 +511,91 @@ namespace HRM_DEV.Controllers
                     TempData.Keep("Empleado");
 
                     exportData = String.Format("<html><head>Comprobante de Vacaciones</head><body><h1>" +
-                                          " Comprobante de Vacaciones</h1><label> Dias Disponibles:" +
-                                          "</label>  <p>" + ViewBag.DiasDisponibles + "</p><label>" +
-                                          "Empleado: </label><p>" + Vacaciones.EMPLEADOS.NOMBRE
+                                          " Comprobante de Vacaciones</h1><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Dias Disponibles: " + ViewBag.DiasDisponibles + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + Vacaciones.EMPLEADOS.NOMBRE
                                           + " " + Vacaciones.EMPLEADOS.APE1 + " " +
-                                          Vacaciones.EMPLEADOS.APE2 + " </p><label>Inicio: "
-                                          + "</label>" + "<p>" + Vacaciones.INICIO + "</p> " +
-                                          " <label>Fin: </label>" + "<p>" + Vacaciones.FINAL +
-                                          "</p><label>Cantidad de dias: </label> <p>" + Vacaciones.CANT_DIAS +
-                                          "</p><label>Autorizacion: </label><p>" + Vacaciones.AUTORIZACION +
-                                          "</p></body></html>", "<style>h1{position:absolute; top:5%;}</style>");
+                                          Vacaciones.EMPLEADOS.APE2 + "</label><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Inicio: " + Vacaciones.INICIO + " </label><br></br><br></br><br></br>" +
+                                          " <label style='font-size: 23px;font-weight:bold;'>Fin: " + Vacaciones.FINAL + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Cantidad de dias: " + Vacaciones.CANT_DIAS + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Autorizacion: " + Vacaciones.AUTORIZACION + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del autorizador: _____________________________</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "</body></html>", "<style></style>");
                 }
                 else if (Request.Form["ComprobanteAmonestaciones"] != null)
                 {
                     var amonestaciones = db.AMONESTACIONES.Find(id);
 
                     exportData = String.Format("<html><head>Comprobante de Amonestaciones</head><body><h1>" +
-                                          " Comprobante de Amonestaciones</h1><label>" +
-                                          "Empleado: </label><p>" + amonestaciones.EMPLEADOS.NOMBRE
+                                          " Comprobante de Amonestaciones</h1><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + 
+                                          amonestaciones.EMPLEADOS.NOMBRE
                                           + " " + amonestaciones.EMPLEADOS.APE1 + " " +
-                                          amonestaciones.EMPLEADOS.APE2 + " </p><label>Fecha de Inicio: "
-                                          + "</label>" + "<p>" + amonestaciones.FECHA_INICIO + "</p> " +
-                                          " <label>Fecha de Ingreso: </label>" + "<p>" + amonestaciones.FECHA_FINAL +
-                                          "</p><label>Motivo: </label> <p>" + amonestaciones.GOCE_SALARIO +
-                                          "</p><label>Tipo de Amonestacion: </label><p>" + amonestaciones.VERB_ESC +
-                                          "</p><label>Autorización: </label><p>" + amonestaciones.AUTORIZACION +
-                                          "</p></body></html>", "<style></style>");
+                                          amonestaciones.EMPLEADOS.APE2 + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Fecha de Inicio: " + amonestaciones.FECHA_INICIO + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Fecha de Ingreso: " + amonestaciones.FECHA_FINAL + "</label><br></br><br></br><br></br>" + 
+                                          "<label style='font-size: 23px;font-weight:bold;'>Motivo: " + amonestaciones.GOCE_SALARIO + "</label><br></br><br></br><br></br>"+
+                                          "<label style='font-size: 23px;font-weight:bold;'>Tipo de Amonestacion: " + amonestaciones.VERB_ESC + "</label> <br></br><br></br><br></br>" + 
+                                          "<label style='font-size: 23px;font-weight:bold;'>Autorización: " + amonestaciones.AUTORIZACION + "</label><br></br><br></br><br></br>" + 
+                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador: _____________________________ </label ><br></br><br></br><br></br> " +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "</body></html>", "<style></style>");
                 }
                 else if (Request.Form["ComprobanteAscensos"] != null)
                 {
                     var ascensos = db.ASCENSOS.Find(id);
 
                     exportData = String.Format("<html><head>Comprobante de Ascensos</head><body><h1>" +
-                                          " Comprobante de Ascensos</h1><label>" +
-                                          "Empleado: </label><p>" + ascensos.EMPLEADOS.NOMBRE
+                                          " Comprobante de Ascensos</h1><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + ascensos.EMPLEADOS.NOMBRE
                                           + " " + ascensos.EMPLEADOS.APE1 + " " +
-                                          ascensos.EMPLEADOS.APE2 + " </p><label>Descripcion: "
-                                          + "</label>" + "<p>" + ascensos.DESCRIPCION + "</p> " +
-                                          " <label>Puesto Anterior: </label>" + "<p>" + ascensos.PUESTO_ANT +
-                                          "</p><label>Puesto Nuevo: </label> <p>" + ascensos.PUESTOS.NOMBRE +
-                                          "</p><label>Fecha de inicio: </label><p>" + ascensos.FECHA +
-                                          "</p><label>Autorización: </label><p>" + ascensos.AUTORIZACION +
-                                          "</p></body></html>", "<style></style>");
+                                          ascensos.EMPLEADOS.APE2 + " </label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Descripcion: " + ascensos.DESCRIPCION + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Puesto Anterior: " + ascensos.PUESTO_ANT + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Puesto Nuevo: " + ascensos.PUESTOS.NOMBRE + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Fecha de inicio: " + ascensos.FECHA + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Autorización: " + ascensos.AUTORIZACION + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador: _____________________________ </label ><br></br><br></br><br></br> " +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "</body></html>", "<style></style>");
                 }
                 else if (Request.Form["ComprobantePermisos"] != null)
                 {
                     var permisos = db.PERMISOS.Find(id);
 
                     exportData = String.Format("<html><head>Comprobante de Permisos</head><body><h1>" +
-                                          " Comprobante de Permisos</h1><label>" +
-                                          "Empleado: </label><p>" + permisos.EMPLEADOS.NOMBRE
+                                          " Comprobante de Permisos</h1><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + permisos.EMPLEADOS.NOMBRE
                                           + " " + permisos.EMPLEADOS.APE1 + " " +
-                                          permisos.EMPLEADOS.APE2 + " </p><label>Fecha de Inicio: "
-                                          + "</label>" + "<p>" + permisos.INICIO + "</p> " +
-                                          " <label>Fecha de Ingreso: </label>" + "<p>" + permisos.FINAL +
-                                          "</p><label>Tipo de Permiso: </label> <p>" + permisos.GOCE_SALARIO +
-                                          "</p><label>Duración: </label><p>" + permisos.CANT_DIAS + " días " +
-                                          + permisos.CANT_HORAS + " horas</p><label>Autorización: </label><p>" + 
-                                          permisos.AUTORIZACION + "</p></body></html>", "<style></style>");
+                                          permisos.EMPLEADOS.APE2 + " </label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Fecha de Inicio: " + permisos.INICIO + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Fecha de Ingreso: " + permisos.FINAL + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Tipo de Permiso: " + permisos.GOCE_SALARIO + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Duración: " + permisos.CANT_DIAS + " días " + permisos.CANT_HORAS + " horas</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Autorización:" + permisos.AUTORIZACION + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador: _____________________________ </label ><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "</body></html>", "<style></style>");
                 }
                 else if (Request.Form["ComprobanteSuspenciones"] != null)
                 {
                     var suspenciones = db.SUSPENSIONES.Find(id);
 
                     exportData = String.Format("<html><head>Comprobante de Suspenciones</head><body><h1>" +
-                                          " Comprobante de Suspenciones</h1><label>" +
-                                          "Empleado: </label><p>" + suspenciones.EMPLEADOS.NOMBRE
+                                          " Comprobante de Suspenciones</h1><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>" + "Empleado: " + suspenciones.EMPLEADOS.NOMBRE
                                           + " " + suspenciones.EMPLEADOS.APE1 + " " +
-                                          suspenciones.EMPLEADOS.APE2 + " </p><label>Fecha de Inicio: "
-                                          + "</label>" + "<p>" + suspenciones.INICIO + "</p> " +
-                                          " <label>Fecha de Ingreso: </label>" + "<p>" + suspenciones.FINAL +
-                                          "</p><label>Tipo de Suspencion: </label> <p>" + suspenciones.GOCE_SALARIO +
-                                          "</p><label>Motivo: </label><p>" + suspenciones.DESCRIPCION +
-                                          "</p><label>Autorización: </label><p>" + suspenciones.AUTORIZACION + 
-                                          "</p></body></html>", "<style></style>");
+                                          suspenciones.EMPLEADOS.APE2 + " </label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Fecha de Inicio: " + suspenciones.INICIO + "</label><br></br><br></br><br></br>" +
+                                          " <label style='font-size: 23px;font-weight:bold;'>Fecha de Ingreso: " + suspenciones.FINAL + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Tipo de Suspencion: " + suspenciones.GOCE_SALARIO + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Motivo: " + suspenciones.DESCRIPCION + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Autorización: " + suspenciones.AUTORIZACION + "</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador: _____________________________ </label ><br></br><br></br><br></br> " +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "</body></html>", "<style></style>");
                 }
                 return ExportarPDF(exportData);
             }
@@ -596,7 +607,7 @@ namespace HRM_DEV.Controllers
         {
             if (childChkbox == null)
             {
-                TempData["Error"] = "¡Se debe seleccionar al menos un departamento!";
+                TempData["Error"] = "¡Se debe un registro para imprimir el comprobante!";
             }
             else
             {
@@ -606,7 +617,7 @@ namespace HRM_DEV.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "¡Solamente es posible ver detalles de un departamento a la vez!";
+                    TempData["Error"] = "¡Solamente es posible imprimir un comprobante a la vez!";
                 }
             }
             return false;
