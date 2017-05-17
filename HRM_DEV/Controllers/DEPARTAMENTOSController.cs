@@ -152,7 +152,7 @@ namespace HRM_DEV.Controllers
                 {
                     return HttpNotFound();
                 }
-                viewBagEmpresas();
+                viewBagEditar(id);
                 return View(dEPARTAMENTOS);
             }
 
@@ -281,6 +281,22 @@ namespace HRM_DEV.Controllers
             foreach (var i in EMP)
             {
                 if (i.ESTADO.Equals("Activo"))
+                {
+                    EMPRESAS.Add(i);
+                }
+            }
+            ViewBag.EMPRESA = new SelectList(EMPRESAS, "ID_EMPRESA", "NOMBRE");
+        }
+
+        public void viewBagEditar(int? id)
+        {
+            List<object> EMPRESAS = new List<Object>();
+            var EMP = db.EMPRESAS;
+            var DEP = db.DEPARTAMENTOS.Find(id);
+            EMPRESAS.Add(EMP.Find(DEP.EMPRESAS.ID_EMPRESA));
+            foreach (var i in EMP)
+            {
+                if (i.ESTADO.Equals("Activo") && i.ID_EMPRESA != id)
                 {
                     EMPRESAS.Add(i);
                 }

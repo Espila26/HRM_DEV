@@ -29,7 +29,7 @@ namespace HRM_DEV.Controllers
 
                 usuarios = usuarios.Where(s => (s.NOMBRE_USUARIO.Equals(NOMBRE_USUARIO)));
 
-                if (usuarios != null)
+                if (usuarios.Count() > 0)
                 {
                     if (usuarios.First().CONTRASEÑA.Equals(CONTRASEÑA))
                     {

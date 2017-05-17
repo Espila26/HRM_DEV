@@ -252,7 +252,7 @@ namespace HRM_DEV.Controllers
                 ViewBagEmpleado();
                 GetPuestoAnt();
                 TempData.Keep("Empleado");
-                ViewBag.PUESTO_NVO = new SelectList(db.PUESTOS, "PTS_ID", "NOMBRE");
+                viewBagPuestos();
                 return View();
             }
 
@@ -266,6 +266,7 @@ namespace HRM_DEV.Controllers
             TempData.Keep("Empleado");
             if (ModelState.IsValid)
             {
+             
                 aSCENSOS.FECHA_CREACION = System.DateTime.Now;
                 db.ASCENSOS.Add(aSCENSOS);
                 EMPLEADOS temp = (EMPLEADOS)TempData["Empleado"];
@@ -276,8 +277,24 @@ namespace HRM_DEV.Controllers
             }
             GetPuestoAnt();
             ViewBagEmpleado();
-            ViewBag.PUESTO_NVO = new SelectList(db.PUESTOS, "PTS_ID", "NOMBRE", aSCENSOS.PUESTO_NVO);
+
+            viewBagPuestos();
             return View(aSCENSOS);
+        }
+
+        public void viewBagPuestos()
+        {
+            List<object> PUESTOS = new List<Object>();
+            var PTS = db.PUESTOS;
+            foreach (var i in PTS)
+            {
+                if (i.DEPARTAMENTOS.EMPRESAS.ESTADO.Equals("Activo"))
+                {
+                    i.NOMBRE = i.NOMBRE + "-" + i.DEPARTAMENTOS.NOMBRE + "-" + i.DEPARTAMENTOS.EMPRESAS.NOMBRE;
+                    PUESTOS.Add(i);
+                }
+            }
+            ViewBag.PUESTO_NVO = new SelectList(PUESTOS, "PTS_ID", "NOMBRE");
         }
 
         public ActionResult IndexAsc()
@@ -321,7 +338,7 @@ namespace HRM_DEV.Controllers
         public void GetPuestoAnt()
         {
             EMPLEADOS temp = (EMPLEADOS)TempData["Empleado"];
-            ViewData["PUESTO_ANT"] = temp.PUESTOS.NOMBRE;
+            ViewData["PUESTO_ANT"] = temp.PUESTOS.NOMBRE + "-" + temp.PUESTOS.DEPARTAMENTOS.NOMBRE + "-" + temp.PUESTOS.DEPARTAMENTOS.EMPRESAS.NOMBRE; 
         }
 
         /*******************************************************  Amonestaciones   ******************************************************************/
@@ -448,6 +465,7 @@ namespace HRM_DEV.Controllers
             {
                 var tempEmpleado = (EMPLEADOS)TempData["Empleado"];
                 var empleado = db.EMPLEADOS.Find(tempEmpleado.EMP_ID);
+                empleado.NOMBRE = empleado.NOMBRE + "-" + empleado.PUESTOS.NOMBRE + "-" + empleado.PUESTOS.DEPARTAMENTOS.NOMBRE + "-" + empleado.PUESTOS.DEPARTAMENTOS.EMPRESAS.NOMBRE;
                 Empleado.Add(empleado);
                 TempData["Empleado"] = empleado;
                 CalcularDiasDisponibles(Empleado.First());
