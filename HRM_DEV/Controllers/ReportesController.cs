@@ -111,6 +111,11 @@ namespace HRM_DEV.Controllers
             string gridData = "";
 
             TempData.Keep("Accion");
+            TempData.Keep("desde");
+            TempData.Keep("hasta");
+            TempData.Keep("datoEmpleado");
+            TempData.Keep("estado");
+
             switch (TempData["Accion"].ToString())
             {
                 case "Vacaciones":
