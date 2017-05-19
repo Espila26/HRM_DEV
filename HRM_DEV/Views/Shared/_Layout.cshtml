@@ -17,6 +17,12 @@
     <link rel="stylesheet" href="~/Content/alertify.default.css" />
 </head>
 <body>
+    @if (user == null)
+    {
+        <script> window.location.href='@Url.Action("Login", "Login")'; </script>
+    }
+    else
+    {
     <div class="container">
         <header>
             <span class="Home"></span>
@@ -103,6 +109,7 @@
             </footer>
         </article>
     </section>
+    }
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
