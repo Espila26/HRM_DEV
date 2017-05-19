@@ -252,7 +252,7 @@ namespace HRM_DEV.Controllers
                 ViewBagEmpleado();
                 GetPuestoAnt();
                 TempData.Keep("Empleado");
-                ViewBag.PUESTO_NVO = new SelectList(db.PUESTOS, "PTS_ID", "NOMBRE");
+                viewBagPuestos();
                 return View();
             }
 
@@ -266,6 +266,7 @@ namespace HRM_DEV.Controllers
             TempData.Keep("Empleado");
             if (ModelState.IsValid)
             {
+             
                 aSCENSOS.FECHA_CREACION = System.DateTime.Now;
                 db.ASCENSOS.Add(aSCENSOS);
                 EMPLEADOS temp = (EMPLEADOS)TempData["Empleado"];
@@ -276,8 +277,24 @@ namespace HRM_DEV.Controllers
             }
             GetPuestoAnt();
             ViewBagEmpleado();
-            ViewBag.PUESTO_NVO = new SelectList(db.PUESTOS, "PTS_ID", "NOMBRE", aSCENSOS.PUESTO_NVO);
+
+            viewBagPuestos();
             return View(aSCENSOS);
+        }
+
+        public void viewBagPuestos()
+        {
+            List<object> PUESTOS = new List<Object>();
+            var PTS = db.PUESTOS;
+            foreach (var i in PTS)
+            {
+                if (i.DEPARTAMENTOS.EMPRESAS.ESTADO.Equals("Activo"))
+                {
+                    i.NOMBRE = i.NOMBRE + "-" + i.DEPARTAMENTOS.NOMBRE + "-" + i.DEPARTAMENTOS.EMPRESAS.NOMBRE;
+                    PUESTOS.Add(i);
+                }
+            }
+            ViewBag.PUESTO_NVO = new SelectList(PUESTOS, "PTS_ID", "NOMBRE");
         }
 
         public ActionResult IndexAsc()
@@ -321,7 +338,7 @@ namespace HRM_DEV.Controllers
         public void GetPuestoAnt()
         {
             EMPLEADOS temp = (EMPLEADOS)TempData["Empleado"];
-            ViewData["PUESTO_ANT"] = temp.PUESTOS.NOMBRE;
+            ViewData["PUESTO_ANT"] = temp.PUESTOS.NOMBRE + "-" + temp.PUESTOS.DEPARTAMENTOS.NOMBRE + "-" + temp.PUESTOS.DEPARTAMENTOS.EMPRESAS.NOMBRE; 
         }
 
         /*******************************************************  Amonestaciones   ******************************************************************/
@@ -448,6 +465,7 @@ namespace HRM_DEV.Controllers
             {
                 var tempEmpleado = (EMPLEADOS)TempData["Empleado"];
                 var empleado = db.EMPLEADOS.Find(tempEmpleado.EMP_ID);
+                empleado.NOMBRE = empleado.NOMBRE + "-" + empleado.PUESTOS.NOMBRE + "-" + empleado.PUESTOS.DEPARTAMENTOS.NOMBRE + "-" + empleado.PUESTOS.DEPARTAMENTOS.EMPRESAS.NOMBRE;
                 Empleado.Add(empleado);
                 TempData["Empleado"] = empleado;
                 CalcularDiasDisponibles(Empleado.First());
@@ -506,6 +524,7 @@ namespace HRM_DEV.Controllers
                 if (Request.Form["ComprobanteVacaciones"] != null)
                 {
                     var Vacaciones = db.VACACIONES.Find(id);
+                    var nombre = Vacaciones.EMPLEADOS.NOMBRE.Split('-');
 
                     ViewBagEmpleado();
                     TempData.Keep("Empleado");
@@ -513,25 +532,26 @@ namespace HRM_DEV.Controllers
                     exportData = String.Format("<html><head>Comprobante de Vacaciones</head><body><h1>" +
                                           " Comprobante de Vacaciones</h1><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Dias Disponibles: " + ViewBag.DiasDisponibles + "</label><br></br><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + Vacaciones.EMPLEADOS.NOMBRE
+                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + nombre[0]
                                           + " " + Vacaciones.EMPLEADOS.APE1 + " " +
                                           Vacaciones.EMPLEADOS.APE2 + "</label><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Inicio: " + Vacaciones.INICIO + " </label><br></br><br></br><br></br>" +
                                           " <label style='font-size: 23px;font-weight:bold;'>Fin: " + Vacaciones.FINAL + "</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Cantidad de dias: " + Vacaciones.CANT_DIAS + "</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Autorizacion: " + Vacaciones.AUTORIZACION + "</label><br></br><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del autorizador: _____________________________</label><br></br><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del autorizador(a): _____________________________</label><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleado(a):    _____________________________</label>" +
                                           "</body></html>", "<style></style>");
                 }
                 else if (Request.Form["ComprobanteAmonestaciones"] != null)
                 {
                     var amonestaciones = db.AMONESTACIONES.Find(id);
+                    var nombre = amonestaciones.EMPLEADOS.NOMBRE.Split('-');
 
                     exportData = String.Format("<html><head>Comprobante de Amonestaciones</head><body><h1>" +
                                           " Comprobante de Amonestaciones</h1><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + 
-                                          amonestaciones.EMPLEADOS.NOMBRE
+                                          nombre[0]
                                           + " " + amonestaciones.EMPLEADOS.APE1 + " " +
                                           amonestaciones.EMPLEADOS.APE2 + "</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Fecha de Inicio: " + amonestaciones.FECHA_INICIO + "</label><br></br><br></br><br></br>" +
@@ -539,17 +559,18 @@ namespace HRM_DEV.Controllers
                                           "<label style='font-size: 23px;font-weight:bold;'>Motivo: " + amonestaciones.GOCE_SALARIO + "</label><br></br><br></br><br></br>"+
                                           "<label style='font-size: 23px;font-weight:bold;'>Tipo de Amonestacion: " + amonestaciones.VERB_ESC + "</label> <br></br><br></br><br></br>" + 
                                           "<label style='font-size: 23px;font-weight:bold;'>Autorización: " + amonestaciones.AUTORIZACION + "</label><br></br><br></br><br></br>" + 
-                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador: _____________________________ </label ><br></br><br></br><br></br> " +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador(a): _____________________________ </label ><br></br><br></br><br></br> " +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleado(a):    _____________________________</label>" +
                                           "</body></html>", "<style></style>");
                 }
                 else if (Request.Form["ComprobanteAscensos"] != null)
                 {
                     var ascensos = db.ASCENSOS.Find(id);
+                    var nombre = ascensos.EMPLEADOS.NOMBRE.Split('-');
 
                     exportData = String.Format("<html><head>Comprobante de Ascensos</head><body><h1>" +
                                           " Comprobante de Ascensos</h1><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + ascensos.EMPLEADOS.NOMBRE
+                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + nombre[0]
                                           + " " + ascensos.EMPLEADOS.APE1 + " " +
                                           ascensos.EMPLEADOS.APE2 + " </label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Descripcion: " + ascensos.DESCRIPCION + "</label><br></br><br></br><br></br>" +
@@ -557,17 +578,18 @@ namespace HRM_DEV.Controllers
                                           "<label style='font-size: 23px;font-weight:bold;'>Puesto Nuevo: " + ascensos.PUESTOS.NOMBRE + "</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Fecha de inicio: " + ascensos.FECHA + "</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Autorización: " + ascensos.AUTORIZACION + "</label><br></br><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador: _____________________________ </label ><br></br><br></br><br></br> " +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador(a): _____________________________ </label ><br></br><br></br><br></br> " +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleado(a):    _____________________________</label>" +
                                           "</body></html>", "<style></style>");
                 }
                 else if (Request.Form["ComprobantePermisos"] != null)
                 {
                     var permisos = db.PERMISOS.Find(id);
+                    var nombre = permisos.EMPLEADOS.NOMBRE.Split('-');
 
                     exportData = String.Format("<html><head>Comprobante de Permisos</head><body><h1>" +
                                           " Comprobante de Permisos</h1><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + permisos.EMPLEADOS.NOMBRE
+                                          "<label style='font-size: 23px;font-weight:bold;'>Empleado: " + nombre[0]
                                           + " " + permisos.EMPLEADOS.APE1 + " " +
                                           permisos.EMPLEADOS.APE2 + " </label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Fecha de Inicio: " + permisos.INICIO + "</label><br></br><br></br><br></br>" +
@@ -575,17 +597,18 @@ namespace HRM_DEV.Controllers
                                           "<label style='font-size: 23px;font-weight:bold;'>Tipo de Permiso: " + permisos.GOCE_SALARIO + "</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Duración: " + permisos.CANT_DIAS + " días " + permisos.CANT_HORAS + " horas</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Autorización:" + permisos.AUTORIZACION + "</label><br></br><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador: _____________________________ </label ><br></br><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador(a): _____________________________ </label ><br></br><br></br><br></br>" +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleado(a):    _____________________________</label>" +
                                           "</body></html>", "<style></style>");
                 }
                 else if (Request.Form["ComprobanteSuspenciones"] != null)
                 {
                     var suspenciones = db.SUSPENSIONES.Find(id);
+                    var nombre = suspenciones.EMPLEADOS.NOMBRE.Split('-');
 
                     exportData = String.Format("<html><head>Comprobante de Suspenciones</head><body><h1>" +
                                           " Comprobante de Suspenciones</h1><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;'>" + "Empleado: " + suspenciones.EMPLEADOS.NOMBRE
+                                          "<label style='font-size: 23px;font-weight:bold;'>" + "Empleado: " + nombre[0]
                                           + " " + suspenciones.EMPLEADOS.APE1 + " " +
                                           suspenciones.EMPLEADOS.APE2 + " </label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Fecha de Inicio: " + suspenciones.INICIO + "</label><br></br><br></br><br></br>" +
@@ -593,8 +616,8 @@ namespace HRM_DEV.Controllers
                                           "<label style='font-size: 23px;font-weight:bold;'>Tipo de Suspencion: " + suspenciones.GOCE_SALARIO + "</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Motivo: " + suspenciones.DESCRIPCION + "</label><br></br><br></br><br></br>" +
                                           "<label style='font-size: 23px;font-weight:bold;'>Autorización: " + suspenciones.AUTORIZACION + "</label><br></br><br></br><br></br>" +
-                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador: _____________________________ </label ><br></br><br></br><br></br> " +
-                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleaso:    _____________________________</label>" +
+                                          "<label style='font-size: 23px;font-weight:bold;' > Firma del autorizador(a): _____________________________ </label ><br></br><br></br><br></br> " +
+                                          "<label style='font-size: 23px;font-weight:bold;'>Firma del empleado(a):    _____________________________</label>" +
                                           "</body></html>", "<style></style>");
                 }
                 return ExportarPDF(exportData);

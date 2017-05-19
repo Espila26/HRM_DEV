@@ -304,6 +304,7 @@
     <Content Include="Imagenes\departamentos.png" />
     <Content Include="Imagenes\empresas.png" />
     <Content Include="Imagenes\flecha.png" />
+    <Content Include="Imagenes\fondo.jpg" />
     <Content Include="Imagenes\home.png" />
     <Content Include="Imagenes\personal.png" />
     <Content Include="Imagenes\plantilla.jpg" />

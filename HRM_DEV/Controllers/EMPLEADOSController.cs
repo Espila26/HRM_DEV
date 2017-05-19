@@ -217,7 +217,7 @@ namespace HRM_DEV.Controllers
                 {
                     return HttpNotFound();
                 }
-                viewBagPuestos();
+                viewBagEditar(id);
                 return View(eMPLEADOS);
             }
 
@@ -319,10 +319,27 @@ namespace HRM_DEV.Controllers
             var PTS = db.PUESTOS;
             foreach (var i in PTS)
             {
-                var DEP = db.DEPARTAMENTOS.Find(i.DEPARTAMENTO);
-                var EMP = db.EMPRESAS.Find(DEP.EMPRESA);
-                if (EMP.ESTADO.Equals("Activo"))
+                if (i.DEPARTAMENTOS.EMPRESAS.ESTADO.Equals("Activo"))
                 {
+                    i.NOMBRE = i.NOMBRE + "-" + i.DEPARTAMENTOS.NOMBRE + "-" + i.DEPARTAMENTOS.EMPRESAS.NOMBRE;
+                    PUESTOS.Add(i);
+                }
+            }
+            ViewBag.PUESTO = new SelectList(PUESTOS, "PTS_ID", "NOMBRE");
+        }
+
+        public void viewBagEditar(int? id)
+        {
+            List<object> PUESTOS = new List<Object>();
+            var PTS = db.PUESTOS;
+            var EMP = db.EMPLEADOS.Find(id);
+            PUESTOS.Add(PTS.Find(EMP.PUESTOS.PTS_ID));
+
+            foreach (var i in PTS)
+            {
+                if (i.DEPARTAMENTOS.EMPRESAS.ESTADO.Equals("Activo") && i.PTS_ID != id)
+                {
+                    i.NOMBRE = i.NOMBRE + "-" + i.DEPARTAMENTOS.NOMBRE + "-" + i.DEPARTAMENTOS.EMPRESAS.NOMBRE;
                     PUESTOS.Add(i);
                 }
             }
