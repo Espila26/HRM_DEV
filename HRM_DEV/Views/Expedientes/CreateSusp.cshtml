@@ -74,7 +74,7 @@
                 <div class="form-group">
                     <div class="col-md-10">
                         @Html.LabelFor(model => model.GOCE_SALARIO, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.DropDownList("Goce Salario", new SelectList(new List<Object> { { "Si" }, { "No" } }), "-- Por favor seleccione --", new { @class = "combobox" })     
+                        @Html.DropDownList("GOCE_SALARIO", new SelectList(new List<Object> { { "Si" }, { "No" } }), "-- Por favor seleccione --", new { @class = "combobox" })     
                     </div>
                     @Html.ValidationMessageFor(model => model.GOCE_SALARIO, "", new { @class = "text-danger" })
                 </div>

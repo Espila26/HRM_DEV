@@ -76,7 +76,7 @@ namespace HRM_DEV.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([Bind(Include = "ID_SOLICITUD,ID_EMPLEADO,INICIO,FINAL,CANT_DIAS,AUTORIZACION,FECHA_CREACION")] VACACIONES vACACIONES)
+        public ActionResult Create([Bind(Include = "ID_SOLICITUD,ID_EMPLEADO,INICIO,FINAL,CANT_DIAS,AUTORIZACION,FECHA_CREACION,DESCRIPCION")] VACACIONES vACACIONES)
         {
             if (ModelState.IsValid)
             {
@@ -88,6 +88,7 @@ namespace HRM_DEV.Controllers
                 db.VACACIONES.Add(vACACIONES);
                 db.SaveChanges();
                 ViewBagEmpleado();
+                TempData["Success"] = "¡La accción de personal ha sido ingresada exitosamente!";
                 return RedirectToAction("Create");
             }
             ViewBagEmpleado();
@@ -114,13 +115,14 @@ namespace HRM_DEV.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateSusp([Bind(Include = "ID_SUSPENSION,ID_EMPLEADO,INICIO,FINAL,DESCRIPCION,GOCE_SALARIO,AUTORIZACION")] SUSPENSIONES sUSPENSIONES)
+        public ActionResult CreateSusp([Bind(Include = "ID_SUSPENSION,ID_EMPLEADO,INICIO,FINAL,FECHA_CREACION,DESCRIPCION,GOCE_SALARIO,AUTORIZACION")] SUSPENSIONES sUSPENSIONES)
         {
             if (ModelState.IsValid)
             {
                 sUSPENSIONES.FECHA_CREACION = System.DateTime.Now;
                 db.SUSPENSIONES.Add(sUSPENSIONES);
 
+                TempData["Success"] = "¡La accción de personal ha sido ingresada exitosamente!";
                 db.SaveChanges();
                 return RedirectToAction("CreateSusp");
             }
@@ -187,12 +189,13 @@ namespace HRM_DEV.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreatePerm([Bind(Include = "ID_PERMISO,ID_EMPLEADO,INICIO,FINAL,GOCE_SALARIO,CANT_HORAS,CANT_DIAS,AUTORIZACION")] PERMISOS pERMISOS)
+        public ActionResult CreatePerm([Bind(Include = "ID_PERMISO,ID_EMPLEADO,INICIO,FINAL,GOCE_SALARIO,CANT_HORAS,CANT_DIAS,FECHA_CREACION,AUTORIZACION,DESCRIPCION")] PERMISOS pERMISOS)
         {
             if (ModelState.IsValid)
             {
                 pERMISOS.FECHA_CREACION = System.DateTime.Now;
                 db.PERMISOS.Add(pERMISOS);
+                TempData["Success"] = "¡La accción de personal ha sido ingresada exitosamente!";
                 db.SaveChanges();
                 return RedirectToAction("CreatePerm");
             }
@@ -261,7 +264,7 @@ namespace HRM_DEV.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAsc([Bind(Include = "ID_ASCENSO,ID_EMPLEADO,DESCRIPCION,PUESTO_ANT,PUESTO_NVO,FECHA,AUTORIZACION")] ASCENSOS aSCENSOS)
+        public ActionResult CreateAsc([Bind(Include = "ID_ASCENSO,ID_EMPLEADO,DESCRIPCION,PUESTO_ANT,PUESTO_NVO,FECHA,FECHA_CREACION,AUTORIZACION")] ASCENSOS aSCENSOS)
         {
             TempData.Keep("Empleado");
             if (ModelState.IsValid)
@@ -273,6 +276,7 @@ namespace HRM_DEV.Controllers
                 var Emp = db.EMPLEADOS.Find(temp.EMP_ID);
                 Emp.PUESTO = aSCENSOS.PUESTO_NVO;
                 db.SaveChanges();
+                TempData["Success"] = "¡La accción de personal ha sido ingresada exitosamente!";
                 return RedirectToAction("CreateAsc");
             }
             GetPuestoAnt();
@@ -360,13 +364,14 @@ namespace HRM_DEV.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAmon([Bind(Include = "ID_AMONESTACION,ID_EMPLEADO,FECHA_INICIO,FECHA_FINAL,DESCRIPCION,GOCE_SALARIO,VERB_ESC,AUTORIZACION")] AMONESTACIONES aMONESTACIONES)
+        public ActionResult CreateAmon([Bind(Include = "ID_AMONESTACION,ID_EMPLEADO,FECHA_INICIO,FECHA_FINAL,FECHA_CREACION,DESCRIPCION,GOCE_SALARIO,VERB_ESC,AUTORIZACION")] AMONESTACIONES aMONESTACIONES)
         {
             if (ModelState.IsValid)
             {
                 aMONESTACIONES.FECHA_CREACION = System.DateTime.Now;
                 db.AMONESTACIONES.Add(aMONESTACIONES);
                 db.SaveChanges();
+                TempData["Success"] = "¡La accción de personal ha sido ingresada exitosamente!";
                 return RedirectToAction("CreateAmon");
             }
 
