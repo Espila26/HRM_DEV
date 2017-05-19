@@ -11,19 +11,36 @@ namespace HRM_DEV.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
     public partial class AMONESTACIONES
     {
-        public int ID_AMONESTACION { get; set; }
-        public int ID_EMPLEADO { get; set; }
-        public System.DateTime FECHA_INICIO { get; set; }
-        public System.DateTime FECHA_FINAL { get; set; }
-        public System.DateTime FECHA_CREACION { get; set; }
-        public string DESCRIPCION { get; set; }
-        public string GOCE_SALARIO { get; set; }
-        public string VERB_ESC { get; set; }
-        public string AUTORIZACION { get; set; }
-    
-        public virtual EMPLEADOS EMPLEADOS { get; set; }
+        public int ID_EMPRESA { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese un nombre"), DisplayName("Nombre de la Empresa"), StringLength(45, ErrorMessage = "Longitud del nombre es muy extensa. Por favor no exceda los 45 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z_]+)*", ErrorMessage = "Formato Inválido.")]
+        public string NOMBRE { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la razón social de la empresa"), DisplayName("Razón Social"), StringLength(25, ErrorMessage = "Longitud de la razón social es muy extensa. Por favor no exceda los 25 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
+        public string RAZON_SOCIAL { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese una cédula jurídica"), DisplayName("Cédula Jurídica"), StringLength(25, ErrorMessage = "Longitud de la cédula jurídica es muy extensa. Por favor no exceda los 25 caracteres."), RegularExpression("^[0-9a-zA-Z;/?'*@-]*", ErrorMessage = "Formato Inválido.")]
+        public string CEDULA_JURIDICA { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la fecha de fundación"), DisplayName("Fecha de Fundación"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public System.DateTime FECHA_FUNDACION { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese el país de orígen"), DisplayName("País de Orígen"), StringLength(25, ErrorMessage = "El nombre del país de orígen es muy extenso. Por favor no exceda los 25 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
+        public string PAIS_ORIGEN { get; set; }
+
+
+
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la sede central de la empresa"), DisplayName("Sede Central"), StringLength(25, ErrorMessage = "El nombre de la sede central es muy extenso. Por favor no exceda los 25 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
+        public string SEDE_CENTRAL { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, seleccione el estado de la empresa"), DisplayName("Estado")]
+        public string ESTADO { get; set; }
+
     }
 }

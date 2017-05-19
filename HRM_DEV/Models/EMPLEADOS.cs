@@ -11,7 +11,9 @@ namespace HRM_DEV.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
     public partial class EMPLEADOS
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -23,26 +25,56 @@ namespace HRM_DEV.Models
             this.SUSPENSIONES = new HashSet<SUSPENSIONES>();
             this.VACACIONES = new HashSet<VACACIONES>();
         }
-    
+
         public int EMP_ID { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor ingrese el Número de empleado"), DisplayName("Número de Empleado"), StringLength(9, ErrorMessage = "La longitud de la cédula es muy extensa, no exceda los 9 caracteres."), RegularExpression("([1-9][0-9]*)", ErrorMessage = "Formato Inválido (Ingrese números.)")]
         public string ID_EMPLEADO { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor ingrese la cédula del empleado"), DisplayName("Cédula"), StringLength(9, ErrorMessage = "La longitud de la cédula es muy extensa, no exceda los 9 caracteres."), RegularExpression("([1-9][0-9]*)", ErrorMessage = "Formato Inválido (Ingrese números.)")]
         public string CEDULA { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese un nombre"), DisplayName("Nombre"), StringLength(30, ErrorMessage = " El nombre del empleado es muy extenso. Por favor no exceda los 30 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
         public string NOMBRE { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese el primer apellido"), DisplayName("Primer Apellido"), StringLength(15, ErrorMessage = " El apellido del empleado es muy extenso. Por favor no exceda los 15 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
         public string APE1 { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese el segundo apelliod"), DisplayName("Segundo Apellido"), StringLength(15, ErrorMessage = " El apellido del empleado es muy extenso. Por favor no exceda los 15 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
         public string APE2 { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la fecha de nacimiento"), DisplayName("Fecha de Nacimiento"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime FECHA_NAC { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la fecha de contratación"), DisplayName("Fecha de Contratación"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime FECHA_CONTR { get; set; }
+
         public int DIAS_VAC_DISP { get; set; }
         public int DIAS_VAC_UTILIZAD { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la dirección del empleado"), DisplayName("Dirección"), DataType(DataType.MultilineText)]
         public string DIRECCION { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese una Descripción"), DisplayName("Descripción"), DataType(DataType.MultilineText)]
         public string DESCRIPCION { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor ingrese el teléfono de habitación del empleado"), DisplayName("Teléfono de Habitación"), StringLength(8, ErrorMessage = "El número es muy extenso, no exceda los 8 caracteres."), RegularExpression("([1-9][0-9]*)", ErrorMessage = "Formato Inválido (Ingrese números.)")]
         public string TEL_HABITACION { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor ingrese el teléfono móvil del empleado"), DisplayName("Teléfono Móvil"), StringLength(8, ErrorMessage = "El número es muy extenso, no exceda los 8 caracteres."), RegularExpression("([1-9][0-9]*)", ErrorMessage = "Formato Inválido (Ingrese números.)")]
         public string TEL_MOVIL { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor ingrese un correo electrónico válido"), DisplayName("Correo Electrónico "), EmailAddress(ErrorMessage = "Correo Eléctronico con formato inválido")]
         public string E_MAIL { get; set; }
+
         public int PUESTO { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la dirección del empleado"), DisplayName("Salario")]
         public double SALARIO { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, seleccione el estado del empleado"), DisplayName("Estado")]
         public string ESTADO { get; set; }
-    
+
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AMONESTACIONES> AMONESTACIONES { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

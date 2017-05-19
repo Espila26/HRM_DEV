@@ -11,19 +11,40 @@ namespace HRM_DEV.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class USUARIOS
     {
         public int ID_USUARIO { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor ingrese un nombre"), DisplayName("Nombre de Usuario"), StringLength(25, ErrorMessage = "Nombre muy extenso. Por favor no exceda los 25 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
         public string NOMBRE_USUARIO { get; set; }
+
+        [DisplayName("Contraseña"), Required(AllowEmptyStrings = false, ErrorMessage = "Por favor ingrese la contraseña del usuario"), MinLength(8, ErrorMessage = "La contraseña debe ser de mínimo 8 caracteres"), StringLength(16, ErrorMessage = "!Contraseña muy extensa! No exceda lo 16 caracteres")]
         public string CONTRASEÑA { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor seleccione el estado del usuario"), DisplayName("Estado")]
         public string ESTADO { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Indique el acceso a este módulo"), DisplayName("Acceso a Empresas")]
         public string ACC_EMPRESA { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Indique el acceso a este módulo"), DisplayName("Acceso a Departamentos")]
         public string ACC_DEPART { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Indique el acceso a este módulo"), DisplayName("Acceso a Puestos")]
         public string ACC_PUESTOS { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Indique el acceso a este módulo"), DisplayName("Acceso a Empleados")]
         public string ACC_EMPLEADOS { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Indique el acceso a este módulo"), DisplayName("Acceso a Acciones de Personal")]
         public string ACC_ACCIONES { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Indique el acceso a este módulo"), DisplayName("Acceso a Usuarios")]
         public string ACC_USUARIO { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Indique el rol del Usuario"), DisplayName("Rol")]
         public string ROL { get; set; }
+
     }
 }

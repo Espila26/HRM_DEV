@@ -11,20 +11,37 @@ namespace HRM_DEV.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
     public partial class PERMISOS
     {
         public int ID_PERMISO { get; set; }
+
         public int ID_EMPLEADO { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la fecha de inicio"), DisplayName("Fecha de inicio"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime INICIO { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese la fecha final"), DisplayName("Fecha final"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), FechaMayor("INICIO")]
         public System.DateTime FINAL { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, indique si dispone de goce de salario"), DisplayName("Goce de Salario")]
         public string GOCE_SALARIO { get; set; }
+
+        [DisplayName("Cantidad de Horas")]
         public int CANT_HORAS { get; set; }
+
+        [DisplayName("Cantidad de Días")]
         public int CANT_DIAS { get; set; }
         public System.DateTime FECHA_CREACION { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese un nombre"), DisplayName("Autorizado por:"), StringLength(30, ErrorMessage = " El nombre del empleado es muy extenso. Por favor no exceda los 30 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
         public string AUTORIZACION { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese una Descripción"), DisplayName("Descripción"), DataType(DataType.MultilineText)]
         public string DESCRIPCION { get; set; }
-    
         public virtual EMPLEADOS EMPLEADOS { get; set; }
+
     }
 }

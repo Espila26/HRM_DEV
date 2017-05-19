@@ -11,7 +11,8 @@ namespace HRM_DEV.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class DEPARTAMENTOS
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,13 +20,21 @@ namespace HRM_DEV.Models
         {
             this.PUESTOS = new HashSet<PUESTOS>();
         }
-    
+
         public int ID_DEPARTAMENTO { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese un nombre"), DisplayName("Nombre del Departamento"), StringLength(45, ErrorMessage = "El nombre del departamento es muy extensa. Por favor no exceda los 45 caracteres."), RegularExpression("([A-Za-z])+( [A-Za-z]+)*", ErrorMessage = "Formato Inválido.")]
         public string NOMBRE { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, ingrese una Descripción"), DisplayName("Descripción del Departamento"), DataType(DataType.MultilineText)]
         public string DESCRIPCION { get; set; }
+
         public int EMPRESA { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor, seleccione el estado del departamento"), DisplayName("Estado")]
         public string ESTADO { get; set; }
-    
+
+
         public virtual EMPRESAS EMPRESAS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PUESTOS> PUESTOS { get; set; }
