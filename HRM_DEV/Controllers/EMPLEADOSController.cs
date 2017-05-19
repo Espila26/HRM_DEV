@@ -276,7 +276,7 @@ namespace HRM_DEV.Controllers
 
         //Buscar un empleado en específico.
 
-        public string CrearID()
+        /*public string CrearID()
         {
             int cont = 0;
             string dia = @DateTime.Now.Day.ToString();
@@ -296,7 +296,7 @@ namespace HRM_DEV.Controllers
                 }
                 return cont + "-" + fecha;
             }
-        }
+        }*/
 
         [HttpPost]
         public JsonResult doesUserNameExist(string UserName)

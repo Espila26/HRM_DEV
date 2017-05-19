@@ -10,7 +10,6 @@
         <EntityTypeShape EntityType="hrm_dbModel.DEPARTAMENTOS" Width="1.5" PointX="3" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="hrm_dbModel.EMPLEADOS" Width="1.5" PointX="7.5" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="hrm_dbModel.EMPRESAS" Width="1.5" PointX="0.75" PointY="10.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="hrm_dbModel.HISTORIALES" Width="1.5" PointX="12.75" PointY="17.5" IsExpanded="true" />
         <EntityTypeShape EntityType="hrm_dbModel.PERMISOS" Width="1.5" PointX="9.75" PointY="15.75" IsExpanded="true" />
         <EntityTypeShape EntityType="hrm_dbModel.PUESTOS" Width="1.5" PointX="5.25" PointY="10.25" IsExpanded="true" />
         <EntityTypeShape EntityType="hrm_dbModel.SUSPENSIONES" Width="1.5" PointX="9.75" PointY="19.375" IsExpanded="true" />
@@ -22,11 +21,9 @@
         <AssociationConnector Association="hrm_dbModel.FK_DEPARTAMENTO_EMPRESA" ManuallyRouted="false" />
         <AssociationConnector Association="hrm_dbModel.FK_PUESTO_DEPARTAMENTO" ManuallyRouted="false" />
         <AssociationConnector Association="hrm_dbModel.FK_EMPLEADO_PUESTO" ManuallyRouted="false" />
-        <AssociationConnector Association="hrm_dbModel.FK_HISTORIAL_EMPLEADO" ManuallyRouted="false" />
         <AssociationConnector Association="hrm_dbModel.FK_PERMISO_EMPLEADO" ManuallyRouted="false" />
         <AssociationConnector Association="hrm_dbModel.FK_SUSPENSION_EMPLEADO" ManuallyRouted="false" />
         <AssociationConnector Association="hrm_dbModel.FK_VACACIONES_EMPLEADO" ManuallyRouted="false" />
-        <AssociationConnector Association="hrm_dbModel.FK_HISTORIAL_USUARIO" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
